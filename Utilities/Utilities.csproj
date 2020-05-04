@@ -43,10 +43,12 @@
   <ItemGroup>
     <Compile Include="Calculations\Interpolations\IInterpolationBehaviour.cs" />
     <Compile Include="Calculations\Interpolations\LinearInterpolator.cs" />
+    <Compile Include="ExtenstionMethods\DateTimeExtensions.cs" />
     <Compile Include="ExtenstionMethods\ListExtensions.cs" />
     <Compile Include="MarketData\DailyMarketData.cs" />
-    <Compile Include="MarketData\InterestRates\AnnualCompoundingCurve.cs" />
-    <Compile Include="MarketData\InterestRates\IInterestRateCurve.cs" />
+    <Compile Include="MarketData\Curves\AnnualCompoundingCurve.cs" />
+    <Compile Include="MarketData\Curves\YieldCurve.cs" />
+    <Compile Include="MarketData\Index.cs" />
     <Compile Include="MarketData\Volatility\IVolatilitySurface.cs" />
     <Compile Include="MarketData\Volatility\BasicVolatilitySurface.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -2,7 +2,7 @@
 using System.Text;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Utilities.MarketData.InterestRates;
+using Utilities.MarketData.Curves;
 using Utilities.Calculations.Interpolations;
 
 namespace Tests.TestUtils.TestMarketData

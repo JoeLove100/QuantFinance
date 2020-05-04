@@ -1,5 +1,6 @@
-﻿using System.Collections.Generic;
-using Utilities.MarketData.InterestRates;
+﻿using System;
+using System.Collections.Generic;
+using Utilities.MarketData.Curves;
 using Utilities.MarketData.Volatility;
 
 namespace Utilities.MarketData
@@ -8,11 +9,12 @@ namespace Utilities.MarketData
     {
         #region constructors
 
-        public DailyMarketData(Dictionary<string, double> indexLevels,
+        public DailyMarketData(DateTime date,
+                               Dictionary<string, Index> indexLevels,
                                Dictionary<string, IVolatilitySurface> volSurfaces,
-                               Dictionary<string, IInterestRateCurve> riskFreeCurves)
+                               Dictionary<string, YieldCurve> riskFreeCurves)
         {
-            IndexLevels = indexLevels;
+            IndexData = indexLevels;
             VolSurfaces = volSurfaces;
             RiskFreeCurves = riskFreeCurves;
         }
@@ -21,9 +23,10 @@ namespace Utilities.MarketData
 
         #region public properties
 
-        public readonly Dictionary<string, double> IndexLevels;
+        public readonly DateTime Date;
+        public readonly Dictionary<string, Index> IndexData;
         public readonly Dictionary<string, IVolatilitySurface> VolSurfaces;
-        public readonly Dictionary<string, IInterestRateCurve> RiskFreeCurves;
+        public readonly Dictionary<string, YieldCurve> RiskFreeCurves;
 
         #endregion
     }
