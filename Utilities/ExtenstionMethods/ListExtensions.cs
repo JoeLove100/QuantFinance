@@ -47,5 +47,22 @@ namespace Utilities.ExtenstionMethods
                 }
             }
         }
+
+        public static bool IsAlmostEqual(this List<double> listOne, 
+                                         List<double> listTwo,
+                                         double tol)
+        {
+            if (listOne.Count != listTwo.Count) return false;
+            else
+            {
+                for(int i = 0; i < listOne.Count; i++)
+                {
+                    if (Math.Abs(listOne[i] - listTwo[i]) > tol) return false;
+                }
+
+                return true;
+            }
+        }
     }
+
 }

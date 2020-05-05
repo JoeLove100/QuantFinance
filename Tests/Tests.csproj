@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Include="TestOptionPricing\TestDigitalOption.cs" />
     <Compile Include="TestOptionPricing\TestEuropeanEqutiyOption.cs" />
+    <Compile Include="TestStochastics\TestBasicRandomNumberGenerator.cs" />
     <Compile Include="TestUtilities\TestCalculations\TestLinearInterpolation.cs" />
     <Compile Include="TestUtilities\TestExtentionMethods\TestDateTimeExtensions.cs" />
     <Compile Include="TestUtilities\TestExtentionMethods\TestListExtensions.cs" />
@@ -69,6 +70,10 @@
     <ProjectReference Include="..\EquityOptionPricing\EquityOptionPricing.csproj">
       <Project>{91c20556-0906-4399-9e38-65fc3b1fdb3d}</Project>
       <Name>EquityOptionPricing</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Stochastics\Stochastics.csproj">
+      <Project>{26fb60ca-e491-4b04-8a64-bc659254cb08}</Project>
+      <Name>Stochastics</Name>
     </ProjectReference>
     <ProjectReference Include="..\Utilities\Utilities.csproj">
       <Project>{de011b25-883b-47a2-9e34-698f5e0d941f}</Project>

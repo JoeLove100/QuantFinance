@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utilities", "Utilities\Util
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EquityOptionPricing", "EquityOptionPricing\EquityOptionPricing.csproj", "{91C20556-0906-4399-9E38-65FC3B1FDB3D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stochastics", "Stochastics\Stochastics.csproj", "{26FB60CA-E491-4B04-8A64-BC659254CB08}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{91C20556-0906-4399-9E38-65FC3B1FDB3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{91C20556-0906-4399-9E38-65FC3B1FDB3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{91C20556-0906-4399-9E38-65FC3B1FDB3D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{26FB60CA-E491-4B04-8A64-BC659254CB08}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{26FB60CA-E491-4B04-8A64-BC659254CB08}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{26FB60CA-E491-4B04-8A64-BC659254CB08}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{26FB60CA-E491-4B04-8A64-BC659254CB08}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
