@@ -10,24 +10,24 @@ namespace Stochastics
     {
         #region constructor 
 
-        public StochasticEngine(IRandomNumberGenerator randGenerator)
+        public StochasticEngine(Sampler sampler)
         {
-            RandomNumerGenerator = randGenerator;
+            Sampler = sampler;
         }
 
         #endregion
 
         #region properties
 
-        protected readonly IRandomNumberGenerator RandomNumerGenerator;
+        protected readonly Sampler Sampler;
 
         #endregion
 
         #region abstract methods
 
-        public abstract List<double> GetGeometricBrownianSeries(double mean, double vol, int length);
-        public abstract List<double> GetBrownianMotionSeries(double mean, double vol, int length);
-        public abstract List<double> GetStandardBrownianMotionSeries(int length);
+        public abstract List<double> GetGeometricBrownianSeries(double mean, double vol, double initialVal, double timestep, int length);
+        public abstract List<double> GetBrownianMotionSeries(double mean, double vol, double timestep, int length);
+        public abstract List<double> GetStandardBrownianMotionSeries(double timestep, int length);
 
         #endregion
 

@@ -52,6 +52,7 @@
     <Compile Include="TestOptionPricing\TestDigitalOption.cs" />
     <Compile Include="TestOptionPricing\TestEuropeanEqutiyOption.cs" />
     <Compile Include="TestStochastics\TestBasicRandomNumberGenerator.cs" />
+    <Compile Include="TestStochastics\TestBasicStochasticEngine.cs" />
     <Compile Include="TestUtilities\TestCalculations\TestLinearInterpolation.cs" />
     <Compile Include="TestUtilities\TestExtentionMethods\TestDateTimeExtensions.cs" />
     <Compile Include="TestUtilities\TestExtentionMethods\TestListExtensions.cs" />
