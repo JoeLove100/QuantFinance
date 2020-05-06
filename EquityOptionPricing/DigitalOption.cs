@@ -72,5 +72,32 @@ namespace OptionPricing
         }
 
         #endregion
+
+        #region overrides
+
+        public override double GetPayoff(Dictionary<string, SortedList<DateTime, double>> underlyingValues)
+        {
+            var indexPrices = underlyingValues[_underlying];
+            var priceAtExpiry = indexPrices[_expiryDate];
+
+            if (_isCall)
+            {
+                if (priceAtExpiry > _strike)
+                {
+                    return _isAssetSettled ? priceAtExpiry : 1;
+                }
+                else return 0;
+            }
+            else
+            {
+                if (priceAtExpiry < _strike)
+                {
+                    return _isAssetSettled ? priceAtExpiry : 1;
+                }
+                else return 0;
+            }
+        }
+
+        #endregion 
     }
 }

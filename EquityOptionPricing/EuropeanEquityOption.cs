@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using MathNet.Numerics.Distributions;
 
 namespace OptionPricing
@@ -19,6 +20,7 @@ namespace OptionPricing
 
         #endregion
 
+        #region public methods
 
         public double GetPriceBSModel(double timePeriod,
                                       double currentPrice,
@@ -45,6 +47,27 @@ namespace OptionPricing
             
         }
 
+        #endregion
+
+        #region overrides
+        
+        public override double GetPayoff(Dictionary<string, SortedList<DateTime, double>> underlyingValues)
+        {
+            var indexPrices = underlyingValues[_underlying];
+            var priceAtExpiry = indexPrices[_expiryDate];
+
+            if (_isCall)
+            {
+                return Math.Max(0, priceAtExpiry - _strike);
+            }
+            else
+            {
+                return Math.Max(0, _strike - priceAtExpiry);
+            }
+            
+        }
+
+        #endregion
 
     }
 }

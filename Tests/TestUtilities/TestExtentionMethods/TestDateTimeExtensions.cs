@@ -54,5 +54,44 @@ namespace Tests.TestUtilities.TestExtentionMethods
             Assert.AreEqual(4.7041096, result, 1e-6);
         }
 
+        [TestMethod]
+        public void TestAddWorkingDaysFriday()
+        {
+            // arrange
+            var date = new DateTime(2020, 5, 1);
+
+            // act
+            var result = date.AddWorkingDay();
+
+            // asset
+            Assert.AreEqual(new DateTime(2020, 5, 4), result);
+        }
+
+        [TestMethod]
+        public void TestAddWorkingDaysSaturday()
+        {
+            // arrange
+            var date = new DateTime(2020, 5, 2);
+
+            // act
+            var result = date.AddWorkingDay();
+
+            // asset
+            Assert.AreEqual(new DateTime(2020, 5, 4), result);
+        }
+
+        [TestMethod]
+        public void TestAddWorkingDaysOtherDay()
+        {
+            // arrange
+            var date = new DateTime(2020, 5, 4);
+
+            // act
+            var result = date.AddWorkingDay();
+
+            // asset
+            Assert.AreEqual(new DateTime(2020, 5, 5), result);
+        }
+
     }
 }

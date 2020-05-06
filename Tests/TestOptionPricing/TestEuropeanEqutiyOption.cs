@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OptionPricing;
 
@@ -11,10 +12,28 @@ namespace Tests.TestOptionPricing
     public class TestEuropeanEqutiyOption
     {
 
-        private static EuropeanEquityOption GetOption(bool isCall)
+        private static EuropeanEquityOption GetOption(bool isCall,
+                                                      double strike = 50)
         {
             var expiryDate = new DateTime(2020, 9, 30);
-            return new EuropeanEquityOption("Test index", expiryDate, 50, isCall, "Test curve");
+            return new EuropeanEquityOption("Test index", expiryDate, strike, isCall, "Test curve");
+        }
+
+        private static Dictionary<string, SortedList<DateTime, double>> GetIndexData()
+        {
+            var indexPrices = new SortedList<DateTime, double>
+            {
+                { new DateTime(2020, 8, 31), 48},
+                { new DateTime(2020, 9, 30), 50.5},
+                { new DateTime(2020, 10, 31), 49}
+            };
+
+            var indexData = new Dictionary<string, SortedList<DateTime, double>>
+            {
+                { "Test index", indexPrices }
+            };
+
+            return indexData;
         }
 
         [TestMethod]
@@ -71,6 +90,62 @@ namespace Tests.TestOptionPricing
             // act
             var parityImpliedDifference = -4.5112346;
             Assert.AreEqual(parityImpliedDifference, difference, 1e-6);
+        }
+
+        [TestMethod]
+        public void TestGetPayoffCallInMoney()
+        {
+            // arrange
+            var option = GetOption(true);
+            var indexData = GetIndexData();
+
+            // act
+            var result = option.GetPayoff(indexData);
+
+            // assert
+            Assert.AreEqual(0.5, result);
+        }
+
+        [TestMethod]
+        public void TestGetPayoffCallOutOfMoney()
+        {
+            // arrange
+            var option = GetOption(true, 53);
+            var indexData = GetIndexData();
+
+            // act
+            var result = option.GetPayoff(indexData);
+
+            // assert
+            Assert.AreEqual(0, result);
+        }
+
+        [TestMethod]
+        public void TestGetPayoffPutInMoney()
+        {
+            // arrange
+            var option = GetOption(false, 51.5);
+            var indexData = GetIndexData();
+
+            // act
+            var result = option.GetPayoff(indexData);
+
+            // assert
+            Assert.AreEqual(1, result);
+        }
+
+        [TestMethod]
+        public void TestGetPayoffPutOutOfMoney()
+        {
+            // arrange
+            var option = GetOption(false, 49.5);
+            var indexData = GetIndexData();
+
+            // act
+            var result = option.GetPayoff(indexData);
+
+            // assert
+            Assert.AreEqual(0, result);
         }
     }
 }

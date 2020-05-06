@@ -23,5 +23,24 @@ namespace Utilities.ExtenstionMethods
             }
 
         }
+
+        public static DateTime AddWorkingDay(this DateTime currentDate)
+        {
+            //TODO: should make this handle bank holidays etc.
+
+            if (currentDate.DayOfWeek is DayOfWeek.Friday)
+            {
+                return currentDate.AddDays(3);
+            }
+            else if (currentDate.DayOfWeek is DayOfWeek.Saturday)
+            {
+                return currentDate.AddDays(2);
+            }
+            else
+            {
+                return currentDate.AddDays(1);
+            }
+
+        }
     }
 }
