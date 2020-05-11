@@ -114,6 +114,20 @@ namespace Tests.TestUtils.TestMarketData
             Assert.AreEqual(0.00625468, result, 1e-5);
         }
 
+        [TestMethod]
+        public void TestGetDiscountFactorRate()
+        {
+            // arrange
+            var curve = GetCurve();
+
+            // act
+            var result = curve.GetDiscountFactor(2.5, 0.05);
+
+            // asssert
+            Assert.AreEqual(0.885170, result, 1e-6);
+        }
+
+
         #endregion
     }
 }

@@ -89,7 +89,8 @@ namespace Stochastics
                                               double discountFactor,
                                               int numberSims)
             ///<summary>
-            /// simulate the payoff of the 
+            /// simulate the payoff of the given equity option and 
+            /// take the average discounted value as the option value
             ///</summary>
         {
             var simulatedValues = new List<double>();

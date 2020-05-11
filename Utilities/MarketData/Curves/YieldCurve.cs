@@ -30,11 +30,11 @@ namespace Utilities.MarketData.Curves
 
         public double GetSpotRate(double tenor)
         {
-            var spotRate = GetInterpolatedRate(tenor);
+            var spotRate = GetInterpolatedSpotRate(tenor);
             return spotRate;
         }
 
-        protected double GetInterpolatedRate(double tenor)
+        protected double GetInterpolatedSpotRate(double tenor)
         {
             var tenorIndices = _tenors.GetPrevAndNextIndex(tenor);
             var selectedTenors = new List<double> { _tenors[tenorIndices.Item1], _tenors[tenorIndices.Item2] };
@@ -49,6 +49,8 @@ namespace Utilities.MarketData.Curves
         #region abstract methods
 
         public abstract double GetAnnualisedForwardRate(double startTenor, double endTenor);
+        public abstract double GetDiscountFactor(double tenor);
+        public abstract double GetDiscountFactor(double tenor, double interestRate);
 
         #endregion
 

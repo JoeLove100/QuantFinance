@@ -45,6 +45,7 @@
     <Compile Include="Calculations\Interpolations\LinearInterpolator.cs" />
     <Compile Include="ExtenstionMethods\DateTimeExtensions.cs" />
     <Compile Include="ExtenstionMethods\ListExtensions.cs" />
+    <Compile Include="MarketData\Curves\ContinuousCompoundingCurve.cs" />
     <Compile Include="MarketData\DailyMarketData.cs" />
     <Compile Include="MarketData\Curves\AnnualCompoundingCurve.cs" />
     <Compile Include="MarketData\Curves\YieldCurve.cs" />

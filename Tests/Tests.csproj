@@ -59,6 +59,7 @@
     <Compile Include="TestUtilities\TestMarketData\TestAnnualCompoundingCurve.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestUtilities\TestMarketData\TestBasicVolatilitySurface.cs" />
+    <Compile Include="TestUtilities\TestMarketData\TestContinuousCompoundingCurve.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
