@@ -19,22 +19,22 @@ namespace OptionPricing
                             bool isCall,
                             string discountCurve)
         {
-            _underlying = underlying;
-            _expiryDate = expiryDate;
-            _strike = strike;
-            _isCall = isCall;
-            _discountCurve = discountCurve;
+            Underlying = underlying;
+            ExpiryDate = expiryDate;
+            Strike = strike;
+            IsCall = isCall;
+            DiscountCurve = discountCurve;
         }
 
         #endregion
 
         #region fields
 
-        protected readonly string _underlying;
-        protected readonly DateTime _expiryDate;
-        protected readonly double _strike;
-        protected readonly bool _isCall;
-        protected readonly string _discountCurve;
+        public readonly string Underlying;
+        public readonly DateTime ExpiryDate;
+        public readonly double Strike;
+        public readonly bool IsCall;
+        public readonly string DiscountCurve;
 
         #endregion
 
@@ -49,9 +49,9 @@ namespace OptionPricing
             }
 
             var timePeriod = marketData.Date.GetYearFractionTo(forwardDate);
-            var currentIndexPrice = marketData.IndexData[_underlying].Level;
-            var dividendYield = marketData.IndexData[_underlying].DividendCurve.GetSpotRate(timePeriod);
-            var interestRate = marketData.IndexData[_underlying].DividendCurve.GetSpotRate(timePeriod);
+            var currentIndexPrice = marketData.IndexData[Underlying].Level;
+            var dividendYield = marketData.IndexData[Underlying].DividendCurve.GetSpotRate(timePeriod);
+            var interestRate = marketData.IndexData[Underlying].DividendCurve.GetSpotRate(timePeriod);
 
             var fwdPrice = GetUnderlyingForwardPrice(currentIndexPrice, dividendYield, interestRate, timePeriod);
             return fwdPrice;

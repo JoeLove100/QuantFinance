@@ -57,6 +57,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\EquityOptionPricing\EquityOptionPricing.csproj">
+      <Project>{91c20556-0906-4399-9e38-65fc3b1fdb3d}</Project>
+      <Name>EquityOptionPricing</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Utilities\Utilities.csproj">
       <Project>{de011b25-883b-47a2-9e34-698f5e0d941f}</Project>
       <Name>Utilities</Name>

@@ -42,9 +42,9 @@ namespace OptionPricing
 
             if (_isAssetSettled)
             {
-                var d1 = (Math.Log(currentPrice / _strike) + (interestRate - divYield + 0.5 * Math.Pow(vol, 2)) * timePeriod) /
+                var d1 = (Math.Log(currentPrice / Strike) + (interestRate - divYield + 0.5 * Math.Pow(vol, 2)) * timePeriod) /
                     (vol * Math.Sqrt(timePeriod));
-                if (_isCall)
+                if (IsCall)
                 {
                     optionPrice = currentPrice * Normal.CDF(0, 1, d1) * discountFactor;
                 }
@@ -56,9 +56,9 @@ namespace OptionPricing
             else
             {
 
-                var d2 = (Math.Log(currentPrice / _strike) + (interestRate - divYield - 0.5 * Math.Pow(vol, 2)) * timePeriod) /
+                var d2 = (Math.Log(currentPrice / Strike) + (interestRate - divYield - 0.5 * Math.Pow(vol, 2)) * timePeriod) /
                     (vol * Math.Sqrt(timePeriod));
-                if (_isCall)
+                if (IsCall)
                 {
                     optionPrice = Normal.CDF(0, 1, d2) * discountFactor;
                 }
@@ -77,12 +77,12 @@ namespace OptionPricing
 
         public override double GetPayoff(Dictionary<string, SortedList<DateTime, double>> underlyingValues)
         {
-            var indexPrices = underlyingValues[_underlying];
-            var priceAtExpiry = indexPrices[_expiryDate];
+            var indexPrices = underlyingValues[Underlying];
+            var priceAtExpiry = indexPrices[ExpiryDate];
 
-            if (_isCall)
+            if (IsCall)
             {
-                if (priceAtExpiry > _strike)
+                if (priceAtExpiry > Strike)
                 {
                     return _isAssetSettled ? priceAtExpiry : 1;
                 }
@@ -90,7 +90,7 @@ namespace OptionPricing
             }
             else
             {
-                if (priceAtExpiry < _strike)
+                if (priceAtExpiry < Strike)
                 {
                     return _isAssetSettled ? priceAtExpiry : 1;
                 }

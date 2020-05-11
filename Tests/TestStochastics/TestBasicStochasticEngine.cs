@@ -24,7 +24,8 @@ namespace Tests.TestStochastics
 
             // act
             double timePeriod = 1.0 / 12.0;
-            var result = stochasticEngine.GetBrownianMotionSeries(0.1, 0.18, timePeriod, 7);
+            var gbmParams = new GbmParameters(0.1, 0.18);
+            var result = stochasticEngine.GetBrownianMotionSeries(gbmParams, timePeriod, 7);
 
             // assert
             var expectedResult = new List<double> {-0.004955, 0.068774, 0.052689, 0.144889, 0.131710,
@@ -40,12 +41,14 @@ namespace Tests.TestStochastics
 
             // act
             double timePeriod = 1.0 / 12.0;
-            var result = stochasticEngine.GetGeometricBrownianSeries(0.05, 0.2, 50, timePeriod, 7);
+            var gbpParams = new GbmParameters(0.05, 0.2, 50);
+            var result = stochasticEngine.GetGeometricBrownianSeries(gbpParams, timePeriod, 7);
 
             // assert
             var expectedResult = new List<double> { 49.390526, 53.245843, 51.950346, 57.166804, 55.956294,
                                                     61.642971, 64.982546};
             Assert.IsTrue(expectedResult.IsAlmostEqual(result, 1e-6));
         }
+
     }
 }

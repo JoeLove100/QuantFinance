@@ -1,11 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using Utilities.ExtenstionMethods;
+using OptionPricing;
 
 namespace Stochastics
 {
     public abstract class StochasticEngine
     {
+        #region constants
+
+        public readonly float DailyTimePeriod = 1 / 255;
+
+        #endregion 
+
         #region constructor 
 
         public StochasticEngine(Sampler sampler)
@@ -21,49 +27,36 @@ namespace Stochastics
 
         #endregion
 
-        #region concrete methods
-
-        public SortedList<DateTime, double> GetDailyGBM(double mean,
-                                                        double vol,
-                                                        double initialVal,
-                                                        DateTime startDate, 
-                                                        DateTime endDate)
-            ///<summary>
-            /// utility method to get daily geometric brownian motion of 
-            /// an asset between two dates (inclusive)
-            ///</summary>
-        {
-            var workingDates = new List<DateTime>();
-            var currentDate = startDate;
-            while (currentDate <= endDate)
-            {
-                workingDates.Add(currentDate);
-                currentDate = currentDate.AddWorkingDay();
-            }
-
-            var timePeriod = 1.0 / 250.0;
-            var gbm = GetGeometricBrownianSeries(mean, vol, initialVal, timePeriod, workingDates.Count);
-
-            var dailyGBM = new SortedList<DateTime, double>();
-            for(int i = 0; i < workingDates.Count; i++)
-            {
-                dailyGBM.Add(workingDates[i], gbm[i]);
-            }
-
-            return dailyGBM;
-        }
-
-        #endregion
-
         #region abstract methods
 
-        public abstract List<double> GetGeometricBrownianSeries(double mean, double vol, double initialVal, double timestep, int length);
-        public abstract List<double> GetBrownianMotionSeries(double mean, double vol, double timestep, int length);
+        public abstract List<double> GetGeometricBrownianSeries(GbmParameters parameters, double timestep, int length);
+        public abstract List<double> GetBrownianMotionSeries(GbmParameters parameters, double timestep, int length);
         public abstract List<double> GetStandardBrownianMotionSeries(double timestep, int length);
+        public abstract double GetOptionValue(EquityOption option, DateTime currentDate, 
+                                              Dictionary<string, GbmParameters> underlyingParameters, double interestRate,
+                                              int numberSims);
 
         #endregion
 
+    }
 
+    public class GbmParameters
+    {
+        #region properties
 
+        public readonly double Mean;
+        public readonly double Vol;
+        public readonly double InitialVal;
+
+        #endregion
+
+        public GbmParameters(double mean,
+                             double vol,
+                             double initialVal = 0)
+        {
+            Mean = mean;
+            Vol = vol;
+            InitialVal = initialVal;
+        }
     }
 }

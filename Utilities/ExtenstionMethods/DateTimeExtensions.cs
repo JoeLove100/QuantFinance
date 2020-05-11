@@ -18,7 +18,7 @@ namespace Utilities.ExtenstionMethods
             }
             else
             {
-                var frac = (double) (futureDate - currentDate).Days / (double) daysInYear;
+                var frac = (double) (futureDate - currentDate).Days /  daysInYear;
                 return frac;
             }
 
@@ -41,6 +41,21 @@ namespace Utilities.ExtenstionMethods
                 return currentDate.AddDays(1);
             }
 
+        }
+
+        public static int GetWorkingDaysTo(this DateTime startDate,
+                                           DateTime futureDate)
+        {
+            var dayCount = 0;
+            var currentDate = startDate;
+
+            while(currentDate <= futureDate)
+            {
+                dayCount += 1;
+                currentDate.AddWorkingDay();
+            }
+
+            return dayCount;
         }
     }
 }

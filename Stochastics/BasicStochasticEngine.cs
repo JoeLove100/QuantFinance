@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MathNet.Numerics.Distributions;
+using OptionPricing;
+using Utilities.ExtenstionMethods;
 
 /// <summary>
 /// naive, synchronous implementation of an engine
@@ -22,8 +21,7 @@ namespace Stochastics
 
         }
 
-        public override List<double> GetBrownianMotionSeries(double mean, 
-                                                             double vol, 
+        public override List<double> GetBrownianMotionSeries(GbmParameters parameters,
                                                              double timeStep, 
                                                              int length)
             ///<summary>
@@ -41,7 +39,7 @@ namespace Stochastics
             
             foreach(double x in standardNormalNumbers)
             {
-                var brownian = prev + mean * timeStep + vol * x * Math.Sqrt(timeStep);
+                var brownian = prev + parameters.Mean * timeStep + parameters.Vol * x * Math.Sqrt(timeStep);
                 prev = brownian;
                 brownianMotion.Add(prev);
             }
@@ -54,27 +52,24 @@ namespace Stochastics
 
         #region overrides
 
-        public override List<double> GetGeometricBrownianSeries(double mean, 
-                                                                double vol,
-                                                                double initialVal, 
+        public override List<double> GetGeometricBrownianSeries(GbmParameters parameters,
                                                                 double timestep,
                                                                 int length)
             ///<summary>
             /// generates a series of observations of a geometric brownian 
             /// variable for projecting investable assets
-            /// <paramref name="mean"/> annual drift of the process
-            /// <paramref name="vol"/> annual standard deviation of modelled returns
-            /// <paramref name="initialVal"/> starting value for the asset 
+            /// <paramref name="parameters"/> parameters for brownian motion
             /// <paramref name="timeStep"/> period in years between each observation
             /// <paramref name="length"/> number of observations to be generated
             ///</summary>
         {
             var gbSeries = new List<double>();
-            var brownianSeries = GetBrownianMotionSeries(mean - 0.5 * Math.Pow(vol, 2), vol, timestep, length);
+            var geomParameters = new GbmParameters(parameters.Mean - 0.5 * Math.Pow(parameters.Vol, 2), parameters.Vol);
+            var brownianSeries = GetBrownianMotionSeries(geomParameters, timestep, length);
 
             foreach(double brownianVal in brownianSeries)
             {
-                var geomBrownianVal = initialVal * Math.Exp(brownianVal);
+                var geomBrownianVal = parameters.InitialVal * Math.Exp(brownianVal);
                 gbSeries.Add(geomBrownianVal);
             }
 
@@ -84,7 +79,38 @@ namespace Stochastics
         public override List<double> GetStandardBrownianMotionSeries(double timestep, 
                                                                      int length)
         {
-            return GetBrownianMotionSeries(0, 1, timestep, length);
+            var standardParameters = new GbmParameters(0, 1);
+            return GetBrownianMotionSeries(standardParameters, timestep, length);
+        }
+
+        public override double GetOptionValue(EquityOption option,
+                                              DateTime currentDate,
+                                              Dictionary<string, GbmParameters> parametersByUnderlying,
+                                              double discountFactor,
+                                              int numberSims)
+            ///<summary>
+            /// simulate the payoff of the 
+            ///</summary>
+        {
+            var simulatedValues = new List<double>();
+            var simulationLengtDays = currentDate.GetWorkingDaysTo(option.ExpiryDate);
+
+            for (int i = 0; i < numberSims; i++)
+            {
+                var underlyingProjections = new Dictionary<string, SortedList<DateTime, double>>();
+                foreach (KeyValuePair<string, GbmParameters> parameters in parametersByUnderlying)
+                {
+                    var rawStockPrices = GetGeometricBrownianSeries(parameters.Value, DailyTimePeriod, simulationLengtDays);
+                    underlyingProjections.Add(parameters.Key, rawStockPrices.AsBDTimeSeries(currentDate));
+                }
+
+                var optionPayoff = option.GetPayoff(underlyingProjections);
+                simulatedValues.Add(optionPayoff);
+            }
+
+            var avgPayoff = simulatedValues.Sum() / numberSims;
+            var discountedAvgPayoff = avgPayoff * discountFactor;
+            return discountedAvgPayoff;
         }
 
         #endregion

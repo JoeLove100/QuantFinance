@@ -63,6 +63,49 @@ namespace Utilities.ExtenstionMethods
                 return true;
             }
         }
+
+        public static bool IsAlmostEqual(this SortedList<DateTime, double> listOne,
+                                         SortedList<DateTime, double> listTwo,
+                                         double tol)
+        {
+            if (listOne.Count != listTwo.Count) return false;
+            else
+            {
+                for(int i = 0; i < listOne.Count; i++)
+                {
+                   
+                    var dateOne = listOne.Keys[i];
+                    var dateTwo = listTwo.Keys[i];
+                    if (dateOne != dateTwo) return false;
+
+                    var valOne = listOne[dateOne];
+                    var valTwo = listOne[dateTwo];
+                    if (Math.Abs(valOne - valTwo) > tol) return false;
+                }
+            }
+
+            return true;
+        }
+
+        public static SortedList<DateTime, double> AsBDTimeSeries(this List<double> currentList,
+                                                                  DateTime startDate)
+            ///<summary>
+            /// wrap a series as a business day time series
+            ///</summary>
+        {
+            var businessDaySeries = new SortedList<DateTime, double>();
+            var counter = 0;
+            var currentDate = startDate;
+
+            while (counter < currentList.Count)
+            {
+                businessDaySeries.Add(currentDate, currentList[counter]);
+                currentDate = currentDate.AddWorkingDay();
+            }
+
+            return businessDaySeries;
+
+        }
     }
 
 }

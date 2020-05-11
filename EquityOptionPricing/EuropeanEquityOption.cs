@@ -28,13 +28,13 @@ namespace OptionPricing
                                       double divYield,
                                       double vol)
         {
-            var d1 = (Math.Log(currentPrice / _strike) + (interestRate - divYield + 0.5 * Math.Pow(vol, 2)) * timePeriod) / 
+            var d1 = (Math.Log(currentPrice / Strike) + (interestRate - divYield + 0.5 * Math.Pow(vol, 2)) * timePeriod) / 
                 (vol * Math.Pow(timePeriod, 0.5));
             var d2 = d1 - vol * Math.Pow(timePeriod, 0.5);
-            var discountedStrike = Math.Exp(-interestRate * timePeriod) * _strike;
+            var discountedStrike = Math.Exp(-interestRate * timePeriod) * Strike;
             var divAdjustedCurrentPrice = Math.Exp(-divYield * timePeriod) * currentPrice;
 
-            if (_isCall)
+            if (IsCall)
             {
                 var price = divAdjustedCurrentPrice * Normal.CDF(0, 1, d1) - discountedStrike * Normal.CDF(0, 1, d2);
                 return price;
@@ -53,16 +53,16 @@ namespace OptionPricing
         
         public override double GetPayoff(Dictionary<string, SortedList<DateTime, double>> underlyingValues)
         {
-            var indexPrices = underlyingValues[_underlying];
-            var priceAtExpiry = indexPrices[_expiryDate];
+            var indexPrices = underlyingValues[Underlying];
+            var priceAtExpiry = indexPrices[ExpiryDate];
 
-            if (_isCall)
+            if (IsCall)
             {
-                return Math.Max(0, priceAtExpiry - _strike);
+                return Math.Max(0, priceAtExpiry - Strike);
             }
             else
             {
-                return Math.Max(0, _strike - priceAtExpiry);
+                return Math.Max(0, Strike - priceAtExpiry);
             }
             
         }
