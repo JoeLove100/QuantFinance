@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using OptionPricing;
 using Utilities.ExtenstionMethods;
+using Utilities.MarketData;
 
 /// <summary>
 /// naive, synchronous implementation of an engine
@@ -94,14 +95,15 @@ namespace Stochastics
             ///</summary>
         {
             var simulatedValues = new List<double>();
-            var simulationLengtDays = currentDate.GetWorkingDaysTo(option.ExpiryDate);
+            var simulationLengthDays = currentDate.GetWorkingDaysTo(option.ExpiryDate);
+            var dailyTimePeriod = 1.0 / TimePeriods.BusinessDaysInYear;
 
             for (int i = 0; i < numberSims; i++)
             {
                 var underlyingProjections = new Dictionary<string, SortedList<DateTime, double>>();
                 foreach (KeyValuePair<string, GbmParameters> parameters in parametersByUnderlying)
                 {
-                    var rawStockPrices = GetGeometricBrownianSeries(parameters.Value, DailyTimePeriod, simulationLengtDays);
+                    var rawStockPrices = GetGeometricBrownianSeries(parameters.Value, dailyTimePeriod, simulationLengthDays);
                     underlyingProjections.Add(parameters.Key, rawStockPrices.AsBDTimeSeries(currentDate));
                 }
 

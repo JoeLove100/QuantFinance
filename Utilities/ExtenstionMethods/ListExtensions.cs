@@ -101,6 +101,7 @@ namespace Utilities.ExtenstionMethods
             {
                 businessDaySeries.Add(currentDate, currentList[counter]);
                 currentDate = currentDate.AddWorkingDay();
+                counter += 1;
             }
 
             return businessDaySeries;

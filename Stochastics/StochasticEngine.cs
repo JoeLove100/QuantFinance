@@ -6,11 +6,6 @@ namespace Stochastics
 {
     public abstract class StochasticEngine
     {
-        #region constants
-
-        public readonly float DailyTimePeriod = 1 / 255;
-
-        #endregion 
 
         #region constructor 
 

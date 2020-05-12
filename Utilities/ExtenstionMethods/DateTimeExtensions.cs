@@ -52,7 +52,7 @@ namespace Utilities.ExtenstionMethods
             while(currentDate <= futureDate)
             {
                 dayCount += 1;
-                currentDate.AddWorkingDay();
+                currentDate = currentDate.AddWorkingDay();
             }
 
             return dayCount;

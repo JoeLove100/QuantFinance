@@ -1,4 +1,4 @@
-﻿namespace Utils.MarketData
+﻿namespace Utilities.MarketData
 {
     public static class TimePeriods
     {

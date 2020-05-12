@@ -12,6 +12,19 @@ namespace Utilities.MarketData.Curves
 
         }
 
+        #region public methods
+
+        public static ContinuousCompoundingCurve GetFlatCurve(double rate)
+        {
+            var ratesByTenor = new SortedDictionary<double, double> { { 1, rate } };
+            var interpolator = new LinearInterpolator();
+            var curve = new ContinuousCompoundingCurve(ratesByTenor, interpolator);
+            return curve;
+        }
+
+        #endregion 
+
+        #region overrides
 
         public override double GetAnnualisedForwardRate(double startTenor, double endTenor)
         {
@@ -34,5 +47,7 @@ namespace Utilities.MarketData.Curves
             var discountFactor = Math.Exp(-tenor * interestRate);
             return discountFactor;
         }
+
+        #endregion
     }
 }
