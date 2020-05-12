@@ -22,12 +22,13 @@ namespace OptionPricing
 
         #region public methods
 
-        public double GetPriceBSModel(double timePeriod,
+        public double GetPriceBSModel(DateTime currentDate,
                                       double currentPrice,
                                       double interestRate,
                                       double divYield,
                                       double vol)
         {
+            var timePeriod = GetTimePeriodToExpiry(currentDate);
             var d1 = (Math.Log(currentPrice / Strike) + (interestRate - divYield + 0.5 * Math.Pow(vol, 2)) * timePeriod) / 
                 (vol * Math.Pow(timePeriod, 0.5));
             var d2 = d1 - vol * Math.Pow(timePeriod, 0.5);
@@ -47,29 +48,125 @@ namespace OptionPricing
             
         }
 
-        public double GetDelta(double timePeriod,
+        public double GetDelta(DateTime currentDate,
                                double currentPrice,
                                double interestRate,
                                double divYield,
                                double vol)
         {
-            var d1 = (Math.Log(currentPrice / Strike) + (interestRate - divYield + 0.5 * Math.Pow(vol, 2)) * timePeriod) /
-                (vol * Math.Pow(timePeriod, 0.5));
+            var timePeriod = GetTimePeriodToExpiry(currentDate);
+            var d1 = GetD1(timePeriod, currentPrice, interestRate, divYield, vol);
 
             if (IsCall)
             {
-                return Normal.CDF(0, 1, d1) * Math.Exp(-divYield * timePeriod);
+                return Math.Exp(-divYield * timePeriod) * Normal.CDF(0, 1, d1);
             }
             else
             {
-                return (Normal.CDF(0, 1, d1) - 1) * Math.Exp(-divYield * timePeriod);
+                return Math.Exp(-divYield * timePeriod) * (Normal.CDF(0, 1, d1) - 1);
             }
+        }
+
+        public double GetGamma(DateTime currentDate,
+                               double currentPrice,
+                               double interestRate,
+                               double divYield,
+                               double vol)
+        {
+            var timePeriod = GetTimePeriodToExpiry(currentDate);
+            var d1 = GetD1(timePeriod, currentPrice, interestRate, divYield, vol);
+            var gamma = Math.Exp(-divYield * timePeriod) * Normal.PDF(0, 1, d1) / (currentPrice * vol * Math.Sqrt(timePeriod));
+            return gamma;
+        }
+
+        public double GetVega(DateTime currentDate,
+                              double currentPrice,
+                              double interestRate,
+                              double divYield,
+                              double vol)
+        {
+            var timePeriod = GetTimePeriodToExpiry(currentDate);
+            var d1 = GetD1(timePeriod, currentPrice, interestRate, divYield, vol);
+            var vega = Math.Exp(-divYield * timePeriod) * currentPrice * Math.Sqrt(timePeriod) * Normal.PDF(0, 1, d1);
+            return vega;
+        }
+
+        public double GetRho(DateTime currentDate,
+                             double currentPrice,
+                             double interestRate,
+                             double divYield,
+                             double vol)
+        {
+            var timePeriod = GetTimePeriodToExpiry(currentDate);
+            var d2 = GetD2(timePeriod, currentPrice, interestRate, divYield, vol);
+            if (IsCall)
+            {
+                return Math.Exp(-interestRate * timePeriod) * timePeriod * Strike * Normal.CDF(0, 1, d2);
+            }
+            else
+            {
+                return Math.Exp(-interestRate * timePeriod) * timePeriod * Strike * (Normal.CDF(0, 1, d2) - 1);
+            }
+        }
+
+        public double GetTheta(DateTime currentDate,
+                               double currentPrice,
+                               double interestRate,
+                               double divYield,
+                               double vol)
+        {
+            var timePeriod = GetTimePeriodToExpiry(currentDate);
+            var d1 = GetD1(timePeriod, currentPrice, interestRate, divYield, vol);
+            var d2 = GetD2(timePeriod, currentPrice, interestRate, divYield, vol);
+
+            if (IsCall)
+            {
+                var theta = -Math.Exp(-divYield * timePeriod) * currentPrice * Normal.PDF(0, 1, d1) * vol / (2 * Math.Sqrt(timePeriod))
+                    - interestRate * Strike * Math.Exp(-interestRate * timePeriod) * Normal.CDF(0, 1, d2)
+                    + divYield * currentPrice * Math.Exp(-divYield * timePeriod) * Normal.CDF(0, 1, d1);
+                return theta;
+            }
+            else
+            {
+                var theta = -Math.Exp(-divYield * timePeriod) * currentPrice * Normal.PDF(0, 1, -d1) * vol / (2 * Math.Sqrt(timePeriod))
+                    - interestRate * Strike * Math.Exp(-interestRate * timePeriod) * (Normal.CDF(0, 1, d2) - 1)
+                    + divYield * currentPrice * Math.Exp(-divYield * timePeriod) * (Normal.CDF(0, 1, d1) - 1);
+                return theta;
+            }
+        }
+
+        #region private methods
+
+        private double GetD1(double timePeriod, 
+                             double currentPrice, 
+                             double interestRate,
+                             double divYield,
+                             double vol)
+        {
+            var d1 = (Math.Log(currentPrice / Strike) + (interestRate - divYield + 0.5 * Math.Pow(vol, 2)) * timePeriod) /
+                (vol * Math.Pow(timePeriod, 0.5));
+            return d1;
+        }
+
+        private double GetD2(double timePeriod,
+                             double currentPrice,
+                             double interestRate,
+                             double divYield,
+                             double vol)
+        {
+            var d1 = GetD1(timePeriod, currentPrice, interestRate, divYield, vol);
+            var d2 = d1 - vol * Math.Sqrt(timePeriod);
+            return d2;
         }
 
         #endregion
 
+
+
+        #endregion
+
         #region overrides
-        
+
         public override double GetPayoff(Dictionary<string, SortedList<DateTime, double>> underlyingValues)
         {
             var indexPrices = underlyingValues[Underlying];

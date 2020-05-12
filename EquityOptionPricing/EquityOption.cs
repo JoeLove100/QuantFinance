@@ -67,6 +67,13 @@ namespace OptionPricing
             return fwdPrice;
         }
 
+        public double GetTimePeriodToExpiry(DateTime currentDate)
+        {
+            var timePeriod = currentDate.GetWorkingDaysTo(ExpiryDate) / TimePeriods.BusinessDaysInYear;
+            return timePeriod;
+
+        }
+
         #endregion
 
         #region abstract methods
