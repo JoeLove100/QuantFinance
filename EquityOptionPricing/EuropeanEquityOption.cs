@@ -47,6 +47,25 @@ namespace OptionPricing
             
         }
 
+        public double GetDelta(double timePeriod,
+                               double currentPrice,
+                               double interestRate,
+                               double divYield,
+                               double vol)
+        {
+            var d1 = (Math.Log(currentPrice / Strike) + (interestRate - divYield + 0.5 * Math.Pow(vol, 2)) * timePeriod) /
+                (vol * Math.Pow(timePeriod, 0.5));
+
+            if (IsCall)
+            {
+                return Normal.CDF(0, 1, d1) * Math.Exp(-divYield * timePeriod);
+            }
+            else
+            {
+                return (Normal.CDF(0, 1, d1) - 1) * Math.Exp(-divYield * timePeriod);
+            }
+        }
+
         #endregion
 
         #region overrides
