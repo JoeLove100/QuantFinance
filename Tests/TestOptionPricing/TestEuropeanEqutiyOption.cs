@@ -54,12 +54,13 @@ namespace Tests.TestOptionPricing
         {
             // arrange
             var EqOption = GetOption(true);
+            var currentDate = new DateTime(2019, 6, 30);
 
             // act
-            var result = EqOption.GetPriceBSModel(1.25, 48, 0.05, 0.02, 0.2);
+            var result = EqOption.GetPriceBSModel(currentDate, 48, 0.05, 0.02, 0.2);
 
             // assert
-            Assert.AreEqual(4.096997, result, 1e-6);
+            Assert.AreEqual(4.241538, result, 1e-6);
         }
 
         [TestMethod]
@@ -67,12 +68,13 @@ namespace Tests.TestOptionPricing
         {
             // arrange
             var EqOption = GetOption(false);
+            var currentDate = new DateTime(2019, 03, 31);
 
             // act
-            var result = EqOption.GetPriceBSModel(0.5, 53, 0.04, 0.06, 0.15);
+            var result = EqOption.GetPriceBSModel(currentDate, 53, 0.04, 0.06, 0.15);
 
             // assert
-            Assert.AreEqual(1.128237, result, 1e-6);
+            Assert.AreEqual(2.968755, result, 1e-6);
         }
 
         [TestMethod]
@@ -81,14 +83,15 @@ namespace Tests.TestOptionPricing
             // arrange
             var callOption = GetOption(true);
             var putOption = GetOption(false);
+            var currentDate = new DateTime(2020, 8, 31);
 
             // assert
-            var callPrice = callOption.GetPriceBSModel(0.9, 45, 0.02, 0.01, 0.18);
-            var putPrice = putOption.GetPriceBSModel(0.9, 45, 0.02, 0.01, 0.18);
+            var callPrice = callOption.GetPriceBSModel(currentDate, 45, 0.02, 0.01, 0.18);
+            var putPrice = putOption.GetPriceBSModel(currentDate, 45, 0.02, 0.01, 0.18);
             var difference = callPrice - putPrice;
 
             // act
-            var parityImpliedDifference = -4.5112346;
+            var parityImpliedDifference = -4.949466;
             Assert.AreEqual(parityImpliedDifference, difference, 1e-6);
         }
 
@@ -146,6 +149,118 @@ namespace Tests.TestOptionPricing
 
             // assert
             Assert.AreEqual(0, result);
+        }
+
+        [TestMethod]
+        public void TestGetCallDelta()
+        {
+            // arrange
+            var option = GetOption(true);
+            var currentDate = new DateTime(2020, 1, 1);
+
+            // act
+            var result = option.GetDelta(currentDate, 47.5, 0.05, 0.03, 0.22);
+
+            // asset
+            Assert.AreEqual(0.455130, result, 1e-6);
+        }
+
+        [TestMethod]
+        public void TestGetPutDelta()
+        {
+            // arrange
+            var option = GetOption(false);
+            var currentDate = new DateTime(2020, 1, 1);
+
+            // act
+            var result = option.GetDelta(currentDate, 47.5, 0.05, 0.03, 0.22);
+
+            // asset
+            Assert.AreEqual(-0.521624, result, 1e-6);
+        }
+
+        [TestMethod]
+        public void TestGetGamma()
+        {
+            // arrange
+            var option = GetOption(true);
+            var currentDate = new DateTime(2020, 1, 1);
+
+            // act
+            var result = option.GetGamma(currentDate, 47.5, 0.05, 0.03, 0.22);
+
+            // asset
+            Assert.AreEqual(0.041960, result, 1e-6);
+        }
+
+        [TestMethod]
+        public void TestGetVega()
+        {
+            // arrange
+            var option = GetOption(true);
+            var currentDate = new DateTime(2020, 1, 1);
+
+            // act
+            var result = option.GetVega(currentDate, 47.5, 0.05, 0.03, 0.22);
+
+            // asset
+            Assert.AreEqual(0.163291, result, 1e-6);
+        }
+
+        [TestMethod]
+        public void TestGetCallRho()
+        {
+            // arrange
+            var option = GetOption(true);
+            var currentDate = new DateTime(2020, 1, 1);
+
+            // act
+            var result = option.GetRho(currentDate, 47.5, 0.05, 0.03, 0.22);
+
+            // asset
+            Assert.AreEqual(0.146873, result, 1e-6);
+        }
+
+        [TestMethod]
+        public void TestGetPutRho()
+        {
+            // arrange
+            var option = GetOption(false);
+            var currentDate = new DateTime(2020, 1, 1);
+
+            // act
+            var result = option.GetRho(currentDate, 47.5, 0.05, 0.03, 0.22);
+
+            // asset
+            Assert.AreEqual(-0.230058, result, 1e-6);
+        }
+
+        [TestMethod]
+        public void TestGetCallTheta()
+        {
+            // arrange
+            var option = GetOption(true);
+            var currentDate = new DateTime(2020, 1, 1);
+
+            // act
+            var result = option.GetTheta(currentDate, 47.5, 0.05, 0.03, 0.22);
+
+            // asset
+            Assert.AreEqual(-0.010317, result, 1e-6);
+        }
+
+        [TestMethod]
+        public void TestGetPutTheta()
+        {
+            // arrange
+            var option = GetOption(false);
+            var currentDate = new DateTime(2020, 1, 1);
+
+            // act
+            var result = option.GetTheta(currentDate, 47.5, 0.05, 0.03, 0.22);
+
+            // asset
+            Assert.AreEqual(-0.006269, result, 1e-6);
         }
     }
 }

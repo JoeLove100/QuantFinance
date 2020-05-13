@@ -69,7 +69,7 @@ namespace OptionPricing
 
         public double GetTimePeriodToExpiry(DateTime currentDate)
         {
-            var timePeriod = currentDate.GetWorkingDaysTo(ExpiryDate) / TimePeriods.BusinessDaysInYear;
+            var timePeriod = (double) currentDate.GetWorkingDaysTo(ExpiryDate) / TimePeriods.BusinessDaysInYear;
             return timePeriod;
 
         }
