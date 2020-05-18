@@ -55,7 +55,7 @@ namespace Tests.TestOptionPricing
             var result = option.GetPriceBSModel(currentDate, pricingData);
 
             // assert
-            Assert.AreEqual(55.779689, result, 1e-6);
+            Assert.AreEqual(61.736323, result, 1e-6);
         }
 
         [TestMethod]
@@ -64,13 +64,13 @@ namespace Tests.TestOptionPricing
             // arrange
             var option = GetOption(false, true);
             var pricingData = new OptionPricingData(100, 0.15, 0.04, 0.0);
-            var currentDate = new DateTime(2016, 4, 31);
+            var currentDate = new DateTime(2016, 4, 30);
 
             // act
             var result = option.GetPriceBSModel(currentDate, pricingData);
 
             // assert
-            Assert.AreEqual(36.1634361, result, 1e-6);
+            Assert.AreEqual(38.814171, result, 1e-6);
         }
 
         [TestMethod]
@@ -85,7 +85,7 @@ namespace Tests.TestOptionPricing
             var result = option.GetPriceBSModel(currentDate, pricingData);
 
             // assert
-            Assert.AreEqual(0.469682, result, 1e-6);
+            Assert.AreEqual(0.467207, result, 1e-6);
         }
 
         [TestMethod]
@@ -100,7 +100,7 @@ namespace Tests.TestOptionPricing
             var result = option.GetPriceBSModel(currentDate, pricingData);
 
             // assert
-            Assert.AreEqual(0.5080694, result, 1e-6);
+            Assert.AreEqual(0.509547, result, 1e-6);
         }
 
         [TestMethod]
@@ -119,7 +119,7 @@ namespace Tests.TestOptionPricing
             var sum = callPrice + putPrice;
 
             // assert
-            var paritySum = 0.9323938;
+            var paritySum = 0.929266;  // should just be the discount factor
             Assert.AreEqual(paritySum, sum, 1e-6);
         }
 
@@ -138,7 +138,7 @@ namespace Tests.TestOptionPricing
             var sum = callPrice + putPrice;
 
             // assert
-            var paritySum = 95.118218;
+            var paritySum = 96.18953;  // should be discounted forward rate
             Assert.AreEqual(paritySum, sum, 1e-6);
         }
 

@@ -35,7 +35,6 @@ namespace OptionPricing
         {
             var timePeriod = GetTimePeriodToExpiry(currentDate);
             double optionPrice;
-            var discountFactor = Math.Exp(-pricingData.CurrentPrice * timePeriod);
 
             var currentPrice = pricingData.CurrentPrice;
             var interestRate = pricingData.InterestRate;
@@ -44,22 +43,21 @@ namespace OptionPricing
 
             if (_isAssetSettled)
             {
-                var d1 = (Math.Log(currentPrice / Strike) + (interestRate - divYield + 0.5 * Math.Pow(vol, 2)) * timePeriod) /
-                    (vol * Math.Sqrt(timePeriod));
+                var divFactor = Math.Exp(-divYield * timePeriod);
+                var d1 = GetD1(timePeriod, pricingData);
                 if (IsCall)
                 {
-                    optionPrice = currentPrice * Normal.CDF(0, 1, d1) * discountFactor;
+                    optionPrice = currentPrice * Normal.CDF(0, 1, d1) * divFactor;
                 }
                 else
                 {
-                    optionPrice = currentPrice * Normal.CDF(0, 1, -d1) * discountFactor;
+                    optionPrice = currentPrice * Normal.CDF(0, 1, -d1) * divFactor;
                 }
             }
             else
             {
-
-                var d2 = (Math.Log(currentPrice / Strike) + (interestRate - divYield - 0.5 * Math.Pow(vol, 2)) * timePeriod) /
-                    (vol * Math.Sqrt(timePeriod));
+                var discountFactor = Math.Exp(-interestRate * timePeriod);
+                var d2 = GetD2(timePeriod, pricingData);
                 if (IsCall)
                 {
                     optionPrice = Normal.CDF(0, 1, d2) * discountFactor;

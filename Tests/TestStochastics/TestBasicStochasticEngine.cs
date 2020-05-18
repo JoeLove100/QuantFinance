@@ -81,13 +81,10 @@ namespace Tests.TestStochastics
             var option = GetEuropeanOption(true);
             var stochasticEngine = GetStochasticEngine(4321);
             var currentDate = new DateTime(2019, 6, 30);
-            var paramsByUnderlying = new Dictionary<string, GbmParameters>
-            {
-                { "Test index", new GbmParameters(0.02, 0.24, 51)}
-            };
+            var gbmParams = new GbmParameters(0.02, 0.24, 51);
 
             // act
-            var result = stochasticEngine.GetOptionValue(option, currentDate, paramsByUnderlying, 0.939413, 100000);
+            var result = stochasticEngine.GetOptionValue(option, currentDate, gbmParams, 0.939413, 100000);
 
             // assert
             Assert.AreEqual(6.4892, result, 1e-4);
@@ -101,13 +98,10 @@ namespace Tests.TestStochastics
             var option = GetEuropeanOption(false);
             var stochasticEngine = GetStochasticEngine(1234);
             var currentDate = new DateTime(2019, 6, 30);
-            var paramsByUnderlying = new Dictionary<string, GbmParameters>
-            {
-                { "Test index", new GbmParameters(0.02, 0.20, 50)}
-            };
+            var gbmParams = new GbmParameters(0.02, 0.20, 50);
 
             // act
-            var result = stochasticEngine.GetOptionValue(option, currentDate, paramsByUnderlying, 0.939413, 100000);
+            var result = stochasticEngine.GetOptionValue(option, currentDate, gbmParams, 0.939413, 100000);
 
             // assert
             Assert.AreEqual(3.7813, result, 1e-4);
@@ -121,13 +115,10 @@ namespace Tests.TestStochastics
             var option = GetDigitalOption(true, true);
             var stochasticEngine = GetStochasticEngine(1423);
             var currentDate = new DateTime(2019, 7, 20);
-            var paramsByUnderlying = new Dictionary<string, GbmParameters>
-            {
-                { "Test index", new GbmParameters(0.04, 0.18, 75) }
-            };
+            var gbmParams = new GbmParameters(0.04, 0.18, 75);
 
             // act
-            var result = stochasticEngine.GetOptionValue(option, currentDate, paramsByUnderlying, 0.966378, 100000);
+            var result = stochasticEngine.GetOptionValue(option, currentDate, gbmParams, 0.966378, 100000);
 
             // assert
             Assert.AreEqual(32.0434, result, 1e-4);
@@ -140,13 +131,10 @@ namespace Tests.TestStochastics
             var option = GetDigitalOption(false, true);
             var stochasticEngine = GetStochasticEngine(1243);
             var currentDate = new DateTime(2019, 7, 20);
-            var paramsByUnderlying = new Dictionary<string, GbmParameters>
-            {
-                { "Test index", new GbmParameters(0.04, 0.18, 75) }
-            };
+            var gbmParams = new GbmParameters(0.04, 0.18, 75);
 
             // act
-            var result = stochasticEngine.GetOptionValue(option, currentDate, paramsByUnderlying, 0.966378, 100000);
+            var result = stochasticEngine.GetOptionValue(option, currentDate, gbmParams, 0.966378, 100000);
 
             // assert
             Assert.AreEqual(42.5441, result, 1e-4);
@@ -159,13 +147,10 @@ namespace Tests.TestStochastics
             var option = GetDigitalOption(true, false);
             var stochasticEngine = GetStochasticEngine(1111);
             var currentDate = new DateTime(2019, 5, 31);
-            var paramsByUnderlying = new Dictionary<string, GbmParameters>
-            {
-                { "Test index", new GbmParameters(0.01, 0.25, 81)}
-            };
+            var gbmParams = new GbmParameters(0.01, 0.25, 81);
 
             // act
-            var result = stochasticEngine.GetOptionValue(option, currentDate, paramsByUnderlying, 1, 100000);
+            var result = stochasticEngine.GetOptionValue(option, currentDate, gbmParams, 1, 100000);
 
             // assert
             Assert.AreEqual(0.49296, result, 1e-4);
@@ -178,13 +163,10 @@ namespace Tests.TestStochastics
             var option = GetDigitalOption(false, false);
             var stochasticEngine = GetStochasticEngine(1221);
             var currentDate = new DateTime(2019, 5, 31);
-            var paramsByUnderlying = new Dictionary<string, GbmParameters>
-            {
-                { "Test index", new GbmParameters(0.01, 0.25, 84)}
-            };
+            var gbmParams = new GbmParameters(0.01, 0.25, 84);
 
             // act
-            var result = stochasticEngine.GetOptionValue(option, currentDate, paramsByUnderlying, 1, 100000);
+            var result = stochasticEngine.GetOptionValue(option, currentDate, gbmParams, 1, 100000);
 
             // assert
             Assert.AreEqual(0.4484, result, 1e-4);

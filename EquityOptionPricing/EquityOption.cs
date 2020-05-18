@@ -74,6 +74,24 @@ namespace OptionPricing
 
         }
 
+        protected double GetD1(double timePeriod,
+                               OptionPricingData pricingData)
+        {
+
+            var d1 = (Math.Log(pricingData.CurrentPrice / Strike) +
+                (pricingData.InterestRate - pricingData.DivYield + 0.5 * Math.Pow(pricingData.Vol, 2)) * timePeriod) /
+                (pricingData.Vol * Math.Pow(timePeriod, 0.5));
+            return d1;
+        }
+
+        protected double GetD2(double timePeriod,
+                               OptionPricingData pricingData)
+        {
+            var d1 = GetD1(timePeriod, pricingData);
+            var d2 = d1 - pricingData.Vol * Math.Sqrt(timePeriod);
+            return d2;
+        }
+
         #endregion
 
         #region abstract methods
