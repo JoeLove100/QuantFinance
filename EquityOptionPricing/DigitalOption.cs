@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using MathNet.Numerics.Distributions;
 using Utilities.MarketData;
+using Utilities.ExtenstionMethods;
 
 namespace OptionPricing
 {
@@ -79,10 +77,9 @@ namespace OptionPricing
 
         #region overrides
 
-        public override double GetPayoff(Dictionary<string, SortedList<DateTime, double>> underlyingValues)
+        public override double GetPayoff(SortedList<DateTime, double> prices)
         {
-            var indexPrices = underlyingValues[Underlying];
-            var priceAtExpiry = indexPrices[ExpiryDate];
+            var priceAtExpiry = prices[ExpiryDate];
 
             if (IsCall)
             {
@@ -104,7 +101,14 @@ namespace OptionPricing
 
         public override double GetCurrentPrice(DateTime currentDate, SortedList<DateTime, OptionPricingData> pricingData)
         {
-            return GetPriceBSModel(currentDate, pricingData[currentDate]);
+            if (currentDate == ExpiryDate)
+            {
+                return GetPayoff(pricingData.GetPriceSeries());
+            }
+            else
+            {
+                return GetPriceBSModel(currentDate, pricingData[currentDate]);
+            }
         }
 
         #endregion 

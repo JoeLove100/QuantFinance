@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OptionPricing;
 using Utilities.MarketData;
+using Utilities.ExtenstionMethods;
 
 namespace Tests.TestOptionPricing
 {
@@ -12,6 +13,7 @@ namespace Tests.TestOptionPricing
     [TestClass]
     public class TestEuropeanEqutiyOption
     {
+        #region fixtures
 
         private static EuropeanEquityOption GetOption(bool isCall,
                                                       double strike = 50)
@@ -31,6 +33,16 @@ namespace Tests.TestOptionPricing
 
             return pricingData;
         }
+
+        private static SortedList<DateTime, double> GetPriceDataOnly()
+        {
+            var allPricingData = GetPricingData();
+            return allPricingData.GetPriceSeries();
+        }
+
+        #endregion
+
+        #region tests
 
         [TestMethod]
         public void TestGetUnderlyingForwardPriceFromRawVariables()
@@ -99,10 +111,10 @@ namespace Tests.TestOptionPricing
         {
             // arrange
             var option = GetOption(true);
-            var pricingData = GetPricingData();
+            var prices = GetPriceDataOnly();
 
             // act
-            var result = option.GetPayoff(pricingData);
+            var result = option.GetPayoff(prices);
 
             // assert
             Assert.AreEqual(0.5, result);
@@ -113,10 +125,10 @@ namespace Tests.TestOptionPricing
         {
             // arrange
             var option = GetOption(true, 53);
-            var pricingData = GetPricingData();
+            var prices = GetPriceDataOnly();
 
             // act
-            var result = option.GetPayoff(pricingData);
+            var result = option.GetPayoff(prices);
 
             // assert
             Assert.AreEqual(0, result);
@@ -127,10 +139,10 @@ namespace Tests.TestOptionPricing
         {
             // arrange
             var option = GetOption(false, 51.5);
-            var pricingData = GetPricingData();
+            var prices = GetPriceDataOnly();
 
             // act
-            var result = option.GetPayoff(pricingData);
+            var result = option.GetPayoff(prices);
 
             // assert
             Assert.AreEqual(1, result);
@@ -141,10 +153,10 @@ namespace Tests.TestOptionPricing
         {
             // arrange
             var option = GetOption(false, 49.5);
-            var pricingData = GetPricingData();
+            var prices = GetPriceDataOnly();
 
             // act
-            var result = option.GetPayoff(pricingData);
+            var result = option.GetPayoff(prices);
 
             // assert
             Assert.AreEqual(0, result);
@@ -156,9 +168,10 @@ namespace Tests.TestOptionPricing
             // arrange
             var option = GetOption(true);
             var currentDate = new DateTime(2020, 1, 1);
+            var pricingData = new OptionPricingData(47.5, 0.22, 0.05, 0.03);
 
             // act
-            var result = option.GetDelta(currentDate, 47.5, 0.05, 0.03, 0.22);
+            var result = option.GetDelta(currentDate, pricingData);
 
             // asset
             Assert.AreEqual(0.455130, result, 1e-6);
@@ -170,9 +183,10 @@ namespace Tests.TestOptionPricing
             // arrange
             var option = GetOption(false);
             var currentDate = new DateTime(2020, 1, 1);
+            var pricingData = new OptionPricingData(47.5, 0.22, 0.05, 0.03);
 
             // act
-            var result = option.GetDelta(currentDate, 47.5, 0.05, 0.03, 0.22);
+            var result = option.GetDelta(currentDate, pricingData);
 
             // asset
             Assert.AreEqual(-0.521624, result, 1e-6);
@@ -184,9 +198,10 @@ namespace Tests.TestOptionPricing
             // arrange
             var option = GetOption(true);
             var currentDate = new DateTime(2020, 1, 1);
+            var pricingData = new OptionPricingData(47.5, 0.22, 0.05, 0.03);
 
             // act
-            var result = option.GetGamma(currentDate, 47.5, 0.05, 0.03, 0.22);
+            var result = option.GetGamma(currentDate, pricingData);
 
             // asset
             Assert.AreEqual(0.041960, result, 1e-6);
@@ -198,9 +213,10 @@ namespace Tests.TestOptionPricing
             // arrange
             var option = GetOption(true);
             var currentDate = new DateTime(2020, 1, 1);
+            var pricingData = new OptionPricingData(47.5, 0.22, 0.05, 0.03);
 
             // act
-            var result = option.GetVega(currentDate, 47.5, 0.05, 0.03, 0.22);
+            var result = option.GetVega(currentDate, pricingData);
 
             // asset
             Assert.AreEqual(0.163291, result, 1e-6);
@@ -212,9 +228,10 @@ namespace Tests.TestOptionPricing
             // arrange
             var option = GetOption(true);
             var currentDate = new DateTime(2020, 1, 1);
+            var pricingData = new OptionPricingData(47.5, 0.22, 0.05, 0.03);
 
             // act
-            var result = option.GetRho(currentDate, 47.5, 0.05, 0.03, 0.22);
+            var result = option.GetRho(currentDate, pricingData);
 
             // asset
             Assert.AreEqual(0.146873, result, 1e-6);
@@ -226,9 +243,10 @@ namespace Tests.TestOptionPricing
             // arrange
             var option = GetOption(false);
             var currentDate = new DateTime(2020, 1, 1);
+            var pricingData = new OptionPricingData(47.5, 0.22, 0.05, 0.03);
 
             // act
-            var result = option.GetRho(currentDate, 47.5, 0.05, 0.03, 0.22);
+            var result = option.GetRho(currentDate, pricingData);
 
             // asset
             Assert.AreEqual(-0.230058, result, 1e-6);
@@ -240,9 +258,10 @@ namespace Tests.TestOptionPricing
             // arrange
             var option = GetOption(true);
             var currentDate = new DateTime(2020, 1, 1);
+            var pricingData = new OptionPricingData(47.5, 0.22, 0.05, 0.03);
 
             // act
-            var result = option.GetTheta(currentDate, 47.5, 0.05, 0.03, 0.22);
+            var result = option.GetTheta(currentDate, pricingData);
 
             // asset
             Assert.AreEqual(-0.010317, result, 1e-6);
@@ -254,12 +273,15 @@ namespace Tests.TestOptionPricing
             // arrange
             var option = GetOption(false);
             var currentDate = new DateTime(2020, 1, 1);
+            var pricingData = new OptionPricingData(47.5, 0.22, 0.05, 0.03);
 
             // act
-            var result = option.GetTheta(currentDate, 47.5, 0.05, 0.03, 0.22);
+            var result = option.GetTheta(currentDate, pricingData);
 
             // asset
             Assert.AreEqual(-0.006269, result, 1e-6);
         }
+
+        #endregion
     }
 }

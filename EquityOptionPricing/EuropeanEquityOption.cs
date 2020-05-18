@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using MathNet.Numerics.Distributions;
 using Utilities.MarketData;
+using Utilities.ExtenstionMethods;
 
 namespace OptionPricing
 {
@@ -158,9 +159,9 @@ namespace OptionPricing
 
         #region overrides
 
-        public override double GetPayoff(SortedList<DateTime, OptionPricingData> pricingData)
+        public override double GetPayoff(SortedList<DateTime, double> prices)
         {
-            var priceAtExpiry = pricingData[ExpiryDate].CurrentPrice;
+            var priceAtExpiry = prices[ExpiryDate];
 
             if (IsCall)
             {
@@ -177,7 +178,7 @@ namespace OptionPricing
         {
             if (currentDate == ExpiryDate)
             {
-                return GetPayoff(pricingData);
+                return GetPayoff(pricingData.GetPriceSeries());
             }
             else
             {

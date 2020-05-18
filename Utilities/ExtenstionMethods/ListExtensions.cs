@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Utilities.MarketData;
 
 /// <summary>
 /// Set of extension methods for IList 
@@ -12,6 +10,9 @@ namespace Utilities.ExtenstionMethods
 {
     public static class ListExtensions
     {
+
+        #region generic list extensions
+
         public static Tuple<int, int> GetPrevAndNextIndex(this List<double> sortedList,
                                                           double value)
         ///<summary>
@@ -48,14 +49,14 @@ namespace Utilities.ExtenstionMethods
             }
         }
 
-        public static bool IsAlmostEqual(this List<double> listOne, 
+        public static bool IsAlmostEqual(this List<double> listOne,
                                          List<double> listTwo,
                                          double tol)
         {
             if (listOne.Count != listTwo.Count) return false;
             else
             {
-                for(int i = 0; i < listOne.Count; i++)
+                for (int i = 0; i < listOne.Count; i++)
                 {
                     if (Math.Abs(listOne[i] - listTwo[i]) > tol) return false;
                 }
@@ -64,6 +65,10 @@ namespace Utilities.ExtenstionMethods
             }
         }
 
+        #endregion
+
+        #region sorted list extensions
+
         public static bool IsAlmostEqual(this SortedList<DateTime, double> listOne,
                                          SortedList<DateTime, double> listTwo,
                                          double tol)
@@ -71,9 +76,9 @@ namespace Utilities.ExtenstionMethods
             if (listOne.Count != listTwo.Count) return false;
             else
             {
-                for(int i = 0; i < listOne.Count; i++)
+                for (int i = 0; i < listOne.Count; i++)
                 {
-                   
+
                     var dateOne = listOne.Keys[i];
                     var dateTwo = listTwo.Keys[i];
                     if (dateOne != dateTwo) return false;
@@ -89,9 +94,9 @@ namespace Utilities.ExtenstionMethods
 
         public static SortedList<DateTime, double> AsBDTimeSeries(this List<double> currentList,
                                                                   DateTime startDate)
-            ///<summary>
-            /// wrap a series as a business day time series
-            ///</summary>
+        ///<summary>
+        /// wrap a series as a business day time series
+        ///</summary>
         {
             var businessDaySeries = new SortedList<DateTime, double>();
             var counter = 0;
@@ -107,6 +112,19 @@ namespace Utilities.ExtenstionMethods
             return businessDaySeries;
 
         }
+
+        public static SortedList<DateTime, double> GetPriceSeries(this SortedList<DateTime, OptionPricingData> currentList)
+        {
+            var prices = new SortedList<DateTime, double>();
+            foreach(KeyValuePair<DateTime, OptionPricingData> kvp in currentList)
+            {
+                prices.Add(kvp.Key, kvp.Value.CurrentPrice);
+            }
+
+            return prices;
+        }
     }
+
+    #endregion 
 
 }

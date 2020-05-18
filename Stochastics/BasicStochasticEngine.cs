@@ -86,7 +86,7 @@ namespace Stochastics
 
         public override double GetOptionValue(EquityOption option,
                                               DateTime currentDate,
-                                              Dictionary<string, GbmParameters> parametersByUnderlying,
+                                              GbmParameters gbmParams,
                                               double discountFactor,
                                               int numberSims)
             ///<summary>
@@ -100,14 +100,9 @@ namespace Stochastics
 
             for (int i = 0; i < numberSims; i++)
             {
-                var underlyingProjections = new Dictionary<string, SortedList<DateTime, double>>();
-                foreach (KeyValuePair<string, GbmParameters> parameters in parametersByUnderlying)
-                {
-                    var rawStockPrices = GetGeometricBrownianSeries(parameters.Value, dailyTimePeriod, simulationLengthDays);
-                    underlyingProjections.Add(parameters.Key, rawStockPrices.AsBDTimeSeries(currentDate));
-                }
-
-                var optionPayoff = option.GetPayoff(underlyingProjections);
+                var rawStockPrices = GetGeometricBrownianSeries(gbmParams, dailyTimePeriod, simulationLengthDays);
+                var rawStockTimeSeries = rawStockPrices.AsBDTimeSeries(currentDate);
+                var optionPayoff = option.GetPayoff(rawStockTimeSeries);
                 simulatedValues.Add(optionPayoff);
             }
 

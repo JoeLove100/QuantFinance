@@ -78,7 +78,7 @@ namespace OptionPricing
 
         #region abstract methods
 
-        public abstract double GetPayoff(SortedList<DateTime, OptionPricingData> pricingData);
+        public abstract double GetPayoff(SortedList<DateTime, double> prices);
         public abstract double GetCurrentPrice(DateTime currentDate, SortedList<DateTime, OptionPricingData> pricingData);
 
         #endregion 

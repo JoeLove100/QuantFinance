@@ -21,10 +21,12 @@ namespace Stochastics.Strategies
 
         public override SortedList<DateTime, double> GetDailyPnl(SortedList<DateTime, OptionPricingData> marketData)
         {
-            var dailyPnl = new SortedList<DateTime, double>();
-            var firstDate = marketData.Keys[0];
+            //var dailyPnl = new SortedList<DateTime, double>();
+            //var firstDate = marketData.Keys[0];
 
-            var optionValue = _option.GetCurrentPrice();
+            //var optionValue = _option.GetCurrentPrice();
+
+            return new SortedList<DateTime, double>();
             
         }
 

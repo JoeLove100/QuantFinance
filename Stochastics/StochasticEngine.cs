@@ -28,7 +28,7 @@ namespace Stochastics
         public abstract List<double> GetBrownianMotionSeries(GbmParameters parameters, double timestep, int length);
         public abstract List<double> GetStandardBrownianMotionSeries(double timestep, int length);
         public abstract double GetOptionValue(EquityOption option, DateTime currentDate, 
-                                              Dictionary<string, GbmParameters> underlyingParameters, double interestRate,
+                                              GbmParameters gbmParams, double interestRate,
                                               int numberSims);
 
         #endregion
