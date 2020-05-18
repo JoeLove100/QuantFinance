@@ -1,12 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Utils.MarketData
+﻿namespace Utilities.MarketData
 {
-    class OptionPricingData
+    public class OptionPricingData
     {
+        #region constructor
+
+        public OptionPricingData(double currentPrice,
+                                 double vol,
+                                 double interestRate,
+                                 double divYield)
+        {
+            CurrentPrice = currentPrice;
+            Vol = vol;
+            InterestRate = interestRate;
+            DivYield = divYield;
+        }
+
+        #endregion
+
+        #region properties
+
+        public readonly double CurrentPrice;
+        public readonly double Vol;
+        public readonly double InterestRate;
+        public readonly double DivYield;
+
+        #endregion
     }
 }
