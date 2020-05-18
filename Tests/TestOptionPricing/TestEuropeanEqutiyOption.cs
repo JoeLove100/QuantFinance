@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OptionPricing;
+using Utilities.MarketData;
 
 namespace Tests.TestOptionPricing
 {
@@ -19,21 +20,16 @@ namespace Tests.TestOptionPricing
             return new EuropeanEquityOption("Test index", expiryDate, strike, isCall, "Test curve");
         }
 
-        private static Dictionary<string, SortedList<DateTime, double>> GetIndexData()
+        private static SortedList<DateTime, OptionPricingData> GetPricingData()
         {
-            var indexPrices = new SortedList<DateTime, double>
+            var pricingData = new SortedList<DateTime, OptionPricingData>
             {
-                { new DateTime(2020, 8, 31), 48},
-                { new DateTime(2020, 9, 30), 50.5},
-                { new DateTime(2020, 10, 31), 49}
+                { new DateTime(2020, 8, 31), new OptionPricingData(48, 0.2, 0.03, 0.01)},
+                { new DateTime(2020, 9, 30), new OptionPricingData(50.5, 0.2, 0.03, 0.01)},
+                { new DateTime(2020, 10, 31), new OptionPricingData(49, 0.2, 0.03, 0.01)}
             };
 
-            var indexData = new Dictionary<string, SortedList<DateTime, double>>
-            {
-                { "Test index", indexPrices }
-            };
-
-            return indexData;
+            return pricingData;
         }
 
         [TestMethod]
@@ -55,9 +51,10 @@ namespace Tests.TestOptionPricing
             // arrange
             var EqOption = GetOption(true);
             var currentDate = new DateTime(2019, 6, 30);
+            var pricingData = new OptionPricingData(48, 0.2, 0.05, 0.02);
 
             // act
-            var result = EqOption.GetPriceBSModel(currentDate, 48, 0.05, 0.02, 0.2);
+            var result = EqOption.GetPriceBSModel(currentDate, pricingData);
 
             // assert
             Assert.AreEqual(4.241538, result, 1e-6);
@@ -69,9 +66,10 @@ namespace Tests.TestOptionPricing
             // arrange
             var EqOption = GetOption(false);
             var currentDate = new DateTime(2019, 03, 31);
+            var pricingData = new OptionPricingData(53, 0.15, 0.04, 0.06);
 
             // act
-            var result = EqOption.GetPriceBSModel(currentDate, 53, 0.04, 0.06, 0.15);
+            var result = EqOption.GetPriceBSModel(currentDate, pricingData);
 
             // assert
             Assert.AreEqual(2.968755, result, 1e-6);
@@ -84,10 +82,11 @@ namespace Tests.TestOptionPricing
             var callOption = GetOption(true);
             var putOption = GetOption(false);
             var currentDate = new DateTime(2020, 8, 31);
+            var pricingData = new OptionPricingData(45, 0.18, 0.02, 0.01);
 
             // assert
-            var callPrice = callOption.GetPriceBSModel(currentDate, 45, 0.02, 0.01, 0.18);
-            var putPrice = putOption.GetPriceBSModel(currentDate, 45, 0.02, 0.01, 0.18);
+            var callPrice = callOption.GetPriceBSModel(currentDate, pricingData);
+            var putPrice = putOption.GetPriceBSModel(currentDate, pricingData);
             var difference = callPrice - putPrice;
 
             // act
@@ -100,10 +99,10 @@ namespace Tests.TestOptionPricing
         {
             // arrange
             var option = GetOption(true);
-            var indexData = GetIndexData();
+            var pricingData = GetPricingData();
 
             // act
-            var result = option.GetPayoff(indexData);
+            var result = option.GetPayoff(pricingData);
 
             // assert
             Assert.AreEqual(0.5, result);
@@ -114,10 +113,10 @@ namespace Tests.TestOptionPricing
         {
             // arrange
             var option = GetOption(true, 53);
-            var indexData = GetIndexData();
+            var pricingData = GetPricingData();
 
             // act
-            var result = option.GetPayoff(indexData);
+            var result = option.GetPayoff(pricingData);
 
             // assert
             Assert.AreEqual(0, result);
@@ -128,10 +127,10 @@ namespace Tests.TestOptionPricing
         {
             // arrange
             var option = GetOption(false, 51.5);
-            var indexData = GetIndexData();
+            var pricingData = GetPricingData();
 
             // act
-            var result = option.GetPayoff(indexData);
+            var result = option.GetPayoff(pricingData);
 
             // assert
             Assert.AreEqual(1, result);
@@ -142,10 +141,10 @@ namespace Tests.TestOptionPricing
         {
             // arrange
             var option = GetOption(false, 49.5);
-            var indexData = GetIndexData();
+            var pricingData = GetPricingData();
 
             // act
-            var result = option.GetPayoff(indexData);
+            var result = option.GetPayoff(pricingData);
 
             // assert
             Assert.AreEqual(0, result);
