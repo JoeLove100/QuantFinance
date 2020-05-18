@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MathNet.Numerics.Distributions;
+using Utilities.MarketData;
 
 namespace OptionPricing
 {
@@ -31,14 +32,17 @@ namespace OptionPricing
 
         #region public methods
 
-        public double GetPriceBSModel(double timePeriod,
-                                      double currentPrice,
-                                      double interestRate,
-                                      double divYield,
-                                      double vol)
+        public double GetPriceBSModel(DateTime currentDate,
+                                      OptionPricingData pricingData)
         {
+            var timePeriod = GetTimePeriodToExpiry(currentDate);
             double optionPrice;
-            var discountFactor = Math.Exp(-interestRate * timePeriod);
+            var discountFactor = Math.Exp(-pricingData.CurrentPrice * timePeriod);
+
+            var currentPrice = pricingData.CurrentPrice;
+            var interestRate = pricingData.InterestRate;
+            var divYield = pricingData.DivYield;
+            var vol = pricingData.Vol;
 
             if (_isAssetSettled)
             {
@@ -96,6 +100,11 @@ namespace OptionPricing
                 }
                 else return 0;
             }
+        }
+
+        public override double GetCurrentPrice(DateTime currentDate, SortedList<DateTime, OptionPricingData> pricingData)
+        {
+            return GetPriceBSModel(currentDate, pricingData[currentDate]);
         }
 
         #endregion 
