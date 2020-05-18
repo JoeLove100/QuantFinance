@@ -27,10 +27,9 @@ namespace OptionPricing
                                       OptionPricingData pricingData)
         {
             var timePeriod = GetTimePeriodToExpiry(currentDate);
-            var d1 = GetD1(timePeriod, pricingData.CurrentPrice, pricingData.InterestRate, 
-                pricingData.DivYield, pricingData.Vol);
-            var d2 = GetD2(timePeriod, pricingData.CurrentPrice, pricingData.InterestRate, 
-                pricingData.DivYield, pricingData.Vol);
+            var d1 = GetD1(timePeriod, pricingData);
+            var d2 = GetD2(timePeriod, pricingData);
+
             var discountedStrike = Math.Exp(-pricingData.InterestRate * timePeriod) * Strike;
             var divAdjustedCurrentPrice = Math.Exp(-pricingData.DivYield * timePeriod) * pricingData.CurrentPrice;
 
@@ -48,88 +47,85 @@ namespace OptionPricing
         }
 
         public double GetDelta(DateTime currentDate,
-                               double currentPrice,
-                               double interestRate,
-                               double divYield,
-                               double vol)
+                               OptionPricingData pricingData)
         {
             var timePeriod = GetTimePeriodToExpiry(currentDate);
-            var d1 = GetD1(timePeriod, currentPrice, interestRate, divYield, vol);
+            var d1 = GetD1(timePeriod, pricingData);
 
             if (IsCall)
             {
-                return Math.Exp(-divYield * timePeriod) * Normal.CDF(0, 1, d1);
+                return Math.Exp(-pricingData.DivYield * timePeriod) * Normal.CDF(0, 1, d1);
             }
             else
             {
-                return Math.Exp(-divYield * timePeriod) * (Normal.CDF(0, 1, d1) - 1);
+                return Math.Exp(-pricingData.DivYield * timePeriod) * (Normal.CDF(0, 1, d1) - 1);
             }
         }
 
         public double GetGamma(DateTime currentDate,
-                               double currentPrice,
-                               double interestRate,
-                               double divYield,
-                               double vol)
+                               OptionPricingData pricingData)
         {
             var timePeriod = GetTimePeriodToExpiry(currentDate);
-            var d1 = GetD1(timePeriod, currentPrice, interestRate, divYield, vol);
-            var gamma = Math.Exp(-divYield * timePeriod) * Normal.PDF(0, 1, d1) / (currentPrice * vol * Math.Sqrt(timePeriod));
+            var d1 = GetD1(timePeriod, pricingData);
+            var gamma = Math.Exp(-pricingData.DivYield * timePeriod) * Normal.PDF(0, 1, d1) / 
+                (pricingData.CurrentPrice * pricingData.Vol * Math.Sqrt(timePeriod));
             return gamma;
         }
 
         public double GetVega(DateTime currentDate,
-                              double currentPrice,
-                              double interestRate,
-                              double divYield,
-                              double vol)
+                              OptionPricingData pricingData)
         {
             var timePeriod = GetTimePeriodToExpiry(currentDate);
-            var d1 = GetD1(timePeriod, currentPrice, interestRate, divYield, vol);
-            var vega = Math.Exp(-divYield * timePeriod) * currentPrice * Math.Sqrt(timePeriod) * Normal.PDF(0, 1, d1) / 100;
+            var d1 = GetD1(timePeriod, pricingData);
+            var vega = Math.Exp(-pricingData.DivYield * timePeriod) * pricingData.CurrentPrice 
+                * Math.Sqrt(timePeriod) * Normal.PDF(0, 1, d1) / 100;
             return vega;
         }
 
         public double GetRho(DateTime currentDate,
-                             double currentPrice,
-                             double interestRate,
-                             double divYield,
-                             double vol)
+                             OptionPricingData pricingData)
         {
             var timePeriod = GetTimePeriodToExpiry(currentDate);
-            var d2 = GetD2(timePeriod, currentPrice, interestRate, divYield, vol);
+            var d2 = GetD2(timePeriod, pricingData);
             if (IsCall)
             {
-                return Math.Exp(-interestRate * timePeriod) * timePeriod * Strike * Normal.CDF(0, 1, d2) / 100;
+                return Math.Exp(-pricingData.InterestRate * timePeriod) * timePeriod * Strike * Normal.CDF(0, 1, d2) / 100;
             }
             else
             {
-                return Math.Exp(-interestRate * timePeriod) * timePeriod * Strike * (Normal.CDF(0, 1, d2) - 1) / 100;
+                return Math.Exp(-pricingData.InterestRate * timePeriod) * timePeriod * Strike * (Normal.CDF(0, 1, d2) - 1) / 100;
             }
         }
 
         public double GetTheta(DateTime currentDate,
-                               double currentPrice,
-                               double interestRate,
-                               double divYield,
-                               double vol)
+                               OptionPricingData pricingData)
         {
             var timePeriod = GetTimePeriodToExpiry(currentDate);
-            var d1 = GetD1(timePeriod, currentPrice, interestRate, divYield, vol);
-            var d2 = GetD2(timePeriod, currentPrice, interestRate, divYield, vol);
+            var d1 = GetD1(timePeriod, pricingData);
+            var d2 = GetD2(timePeriod, pricingData);
 
             if (IsCall)
             {
-                var theta = -Math.Exp(-divYield * timePeriod) * currentPrice * Normal.PDF(0, 1, d1) * vol / (2 * Math.Sqrt(timePeriod))
-                    - interestRate * Strike * Math.Exp(-interestRate * timePeriod) * Normal.CDF(0, 1, d2)
-                    + divYield * currentPrice * Math.Exp(-divYield * timePeriod) * Normal.CDF(0, 1, d1);
+                var term1 = -Math.Exp(-pricingData.DivYield * timePeriod) * pricingData.CurrentPrice * Normal.PDF(0, 1, d1) 
+                    * pricingData.Vol / (2 * Math.Sqrt(timePeriod));
+                var term2 = pricingData.InterestRate * Strike * Math.Exp(-pricingData.InterestRate * timePeriod)
+                    * Normal.CDF(0, 1, d2);
+                var term3 = pricingData.DivYield * pricingData.CurrentPrice * Math.Exp(-pricingData.DivYield * timePeriod) 
+                    * Normal.CDF(0, 1, d1);
+                var theta = term1 - term2 + term3;
+
                 return theta / TimePeriods.BusinessDaysInYear;
             }
             else
             {
-                var theta = -Math.Exp(-divYield * timePeriod) * currentPrice * Normal.PDF(0, 1, -d1) * vol / (2 * Math.Sqrt(timePeriod))
-                    - interestRate * Strike * Math.Exp(-interestRate * timePeriod) * (Normal.CDF(0, 1, d2) - 1)
-                    + divYield * currentPrice * Math.Exp(-divYield * timePeriod) * (Normal.CDF(0, 1, d1) - 1);
+                var term1 = -Math.Exp(-pricingData.DivYield * timePeriod) * pricingData.CurrentPrice * Normal.PDF(0, 1, -d1)
+                    * pricingData.Vol / (2 * Math.Sqrt(timePeriod));
+                var term2 = pricingData.InterestRate * Strike * Math.Exp(-pricingData.InterestRate * timePeriod)
+                    * (Normal.CDF(0, 1, d2) - 1);
+                var term3 = pricingData.DivYield * pricingData.CurrentPrice * Math.Exp(-pricingData.DivYield * timePeriod) 
+                    * (Normal.CDF(0, 1, d1) - 1);
+                var theta = term1 - term2 + term3;
+
                 return theta / TimePeriods.BusinessDaysInYear;
             }
         }
@@ -137,24 +133,20 @@ namespace OptionPricing
         #region private methods
 
         private double GetD1(double timePeriod, 
-                             double currentPrice, 
-                             double interestRate,
-                             double divYield,
-                             double vol)
+                             OptionPricingData pricingData)
         {
-            var d1 = (Math.Log(currentPrice / Strike) + (interestRate - divYield + 0.5 * Math.Pow(vol, 2)) * timePeriod) /
-                (vol * Math.Pow(timePeriod, 0.5));
+
+            var d1 = (Math.Log(pricingData.CurrentPrice / Strike) + 
+                (pricingData.InterestRate - pricingData.DivYield + 0.5 * Math.Pow(pricingData.Vol, 2)) * timePeriod) /
+                (pricingData.Vol * Math.Pow(timePeriod, 0.5));
             return d1;
         }
 
         private double GetD2(double timePeriod,
-                             double currentPrice,
-                             double interestRate,
-                             double divYield,
-                             double vol)
+                             OptionPricingData pricingData)
         {
-            var d1 = GetD1(timePeriod, currentPrice, interestRate, divYield, vol);
-            var d2 = d1 - vol * Math.Sqrt(timePeriod);
+            var d1 = GetD1(timePeriod, pricingData);
+            var d2 = d1 - pricingData.Vol * Math.Sqrt(timePeriod);
             return d2;
         }
 
@@ -166,10 +158,9 @@ namespace OptionPricing
 
         #region overrides
 
-        public override double GetPayoff(Dictionary<string, SortedList<DateTime, double>> underlyingValues)
+        public override double GetPayoff(SortedList<DateTime, OptionPricingData> pricingData)
         {
-            var indexPrices = underlyingValues[Underlying];
-            var priceAtExpiry = indexPrices[ExpiryDate];
+            var priceAtExpiry = pricingData[ExpiryDate].CurrentPrice;
 
             if (IsCall)
             {
@@ -184,7 +175,14 @@ namespace OptionPricing
         
         public override double GetCurrentPrice(DateTime currentDate, SortedList<DateTime, OptionPricingData> pricingData)
         {
-            return GetPriceBSModel(currentDate, pricingData[currentDate]);
+            if (currentDate == ExpiryDate)
+            {
+                return GetPayoff(pricingData);
+            }
+            else
+            {
+                return GetPriceBSModel(currentDate, pricingData[currentDate]);
+            }
         }
 
         #endregion

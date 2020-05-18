@@ -58,9 +58,9 @@ namespace OptionPricing
         }
 
         public double GetUnderlyingForwardPrice(double currentPrice,
-                                                   double dividendYield,
-                                                   double interestRate,
-                                                   double timePeriod)
+                                                double dividendYield,
+                                                double interestRate,
+                                                double timePeriod)
         {
             var fwdFactor = Math.Exp((interestRate - dividendYield) * timePeriod);
             var fwdPrice = currentPrice * fwdFactor;
@@ -78,7 +78,8 @@ namespace OptionPricing
 
         #region abstract methods
 
-        public abstract double GetPayoff(Dictionary<string, SortedList<DateTime, double>> underlyingValues);
+        public abstract double GetPayoff(SortedList<DateTime, OptionPricingData> pricingData);
+        public abstract double GetCurrentPrice(DateTime currentDate, SortedList<DateTime, OptionPricingData> pricingData);
 
         #endregion 
 
