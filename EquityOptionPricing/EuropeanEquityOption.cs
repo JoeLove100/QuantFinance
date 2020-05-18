@@ -24,16 +24,15 @@ namespace OptionPricing
         #region public methods
 
         public double GetPriceBSModel(DateTime currentDate,
-                                      double currentPrice,
-                                      double interestRate,
-                                      double divYield,
-                                      double vol)
+                                      OptionPricingData pricingData)
         {
             var timePeriod = GetTimePeriodToExpiry(currentDate);
-            var d1 = GetD1(timePeriod, currentPrice, interestRate, divYield, vol);
-            var d2 = GetD2(timePeriod, currentPrice, interestRate, divYield, vol);
-            var discountedStrike = Math.Exp(-interestRate * timePeriod) * Strike;
-            var divAdjustedCurrentPrice = Math.Exp(-divYield * timePeriod) * currentPrice;
+            var d1 = GetD1(timePeriod, pricingData.CurrentPrice, pricingData.InterestRate, 
+                pricingData.DivYield, pricingData.Vol);
+            var d2 = GetD2(timePeriod, pricingData.CurrentPrice, pricingData.InterestRate, 
+                pricingData.DivYield, pricingData.Vol);
+            var discountedStrike = Math.Exp(-pricingData.InterestRate * timePeriod) * Strike;
+            var divAdjustedCurrentPrice = Math.Exp(-pricingData.DivYield * timePeriod) * pricingData.CurrentPrice;
 
             if (IsCall)
             {
@@ -181,6 +180,11 @@ namespace OptionPricing
                 return Math.Max(0, Strike - priceAtExpiry);
             }
             
+        }
+        
+        public override double GetCurrentPrice(DateTime currentDate, SortedList<DateTime, OptionPricingData> pricingData)
+        {
+            return GetPriceBSModel(currentDate, pricingData[currentDate]);
         }
 
         #endregion
