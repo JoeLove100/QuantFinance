@@ -16,7 +16,7 @@ namespace Stochastics.Strategies
                                      int contracts)
         {
             _option = option;
-            _contractNumbers = contracts;
+            _numberOfContracts = contracts;
         }
 
         #endregion
@@ -24,13 +24,14 @@ namespace Stochastics.Strategies
         #region properties
 
         protected readonly EquityOption _option;
-        protected readonly int _contractNumbers;
+        protected readonly int _numberOfContracts;
 
         #endregion
 
         #region abstract methods
 
-        public abstract SortedList<DateTime,double> GetDailyPnl(SortedList<DateTime, OptionPricingData> marketData);
+        public abstract SortedList<DateTime, ValueTuple<double, double, double>>
+            GetDailyPnl(Queue<KeyValuePair<DateTime, OptionPricingData>> marketData);
 
         #endregion
     }
