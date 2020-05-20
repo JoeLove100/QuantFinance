@@ -71,6 +71,44 @@ namespace OptionPricing
             return optionPrice;
         }
 
+        protected double GetDelta(DateTime currentDate,
+                                  OptionPricingData pricingData)
+        {
+            var timePeriod = GetTimePeriodToExpiry(currentDate);
+            if (_isAssetSettled)
+            {
+                var d1 = GetD1(timePeriod, pricingData);
+                var adjustment = Math.Exp(-pricingData.DivYield * timePeriod);
+                var scaling = pricingData.Vol * Math.Sqrt(timePeriod);
+                if (IsCall)
+                {
+                    var delta = adjustment * (Normal.CDF(0, 1, d1) + Normal.PDF(0, 1, d1) / scaling);
+                    return delta;
+                }
+                else
+                {
+                    var delta = adjustment * (Normal.CDF(0, 1, -d1) - Normal.PDF(0, 1, d1) / scaling);
+                    return delta;
+                }
+            }
+            else
+            {
+                var d2 = GetD2(timePeriod, pricingData);
+                var discountFactor = Math.Exp(-pricingData.InterestRate * timePeriod);
+                var scaling = pricingData.CurrentPrice * pricingData.Vol * Math.Sqrt(timePeriod);
+                var delta = discountFactor * Normal.PDF(0, 1, d2) / scaling;
+
+                if (IsCall)
+                {
+                    return delta;
+                }
+                else
+                {
+                    return -delta;
+                }
+            }
+        }
+
         #endregion
 
         #region overrides
@@ -107,6 +145,17 @@ namespace OptionPricing
             {
                 return GetPriceBSModel(currentDate, pricingData[currentDate]);
             }
+        }
+
+        public override double GetCurrentDelta(DateTime currentDate, SortedList<DateTime, OptionPricingData> pricingData)
+        {
+            return GetDelta(currentDate, pricingData[currentDate]);
+        }
+
+        public override double GetCurrentGamma(DateTime currentDate, SortedList<DateTime, OptionPricingData> pricingData)
+        {
+            // TODO: Need to add binary option gamma formula
+            throw new NotImplementedException();
         }
 
         #endregion 

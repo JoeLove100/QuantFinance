@@ -254,6 +254,66 @@ namespace Tests.TestOptionPricing
             Assert.AreEqual(0, result);
         }
 
+        [TestMethod]
+        public void TestGetCurrentDeltaCallAssetSettled()
+        {
+            // arrange
+            var option = GetOption(true, true, 108);
+            var currentDate = new DateTime(2018, 4, 30);
+            var pricingData = GetPricingData();
+
+            // act
+            var result = option.GetCurrentDelta(currentDate, pricingData);
+
+            // assert
+            Assert.AreEqual(5.832970, result, 1e-6);
+        }
+
+        [TestMethod]
+        public void TestGetCurrentDeltaPutAssetSettled()
+        {
+            // arrange
+            var option = GetOption(false, true, 108);
+            var currentDate = new DateTime(2018, 4, 30);
+            var pricingData = GetPricingData();
+
+            // act
+            var result = option.GetCurrentDelta(currentDate, pricingData);
+
+            // assert
+            Assert.AreEqual(-4.83297, result, 1e-6);
+        }
+
+        [TestMethod]
+        public void TestGetCurrentDeltaCallCashSettled()
+        {
+            // arrange
+            var option = GetOption(true, false, 108);
+            var currentDate = new DateTime(2018, 4, 30);
+            var pricingData = GetPricingData();
+
+            // act
+            var result = option.GetCurrentDelta(currentDate, pricingData);
+
+            // assert
+            Assert.AreEqual(0.052339, result, 1e-6);
+        }
+
+        [TestMethod]
+        public void TestGetCurrentDeltaPutCashSettled()
+        {
+            // arrange
+            var option = GetOption(false, false, 108);
+            var currentDate = new DateTime(2018, 4, 30);
+            var pricingData = GetPricingData();
+
+            // act
+            var result = option.GetCurrentDelta(currentDate, pricingData);
+
+            // assert
+            Assert.AreEqual(-0.052339, result, 1e-6);
+        }
+
         #endregion 
     }
 }

@@ -170,6 +170,16 @@ namespace OptionPricing
             }
         }
 
+        public override double GetCurrentDelta(DateTime currentDate, SortedList<DateTime, OptionPricingData> pricingData)
+        {
+            return GetDelta(currentDate, pricingData[currentDate]);
+        }
+
+        public override double GetCurrentGamma(DateTime currentDate, SortedList<DateTime, OptionPricingData> pricingData)
+        {
+            return GetGamma(currentDate, pricingData[currentDate]);
+        }
+
         #endregion
 
     }

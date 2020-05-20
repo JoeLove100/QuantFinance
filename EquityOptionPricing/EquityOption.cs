@@ -98,6 +98,8 @@ namespace OptionPricing
 
         public abstract double GetPayoff(SortedList<DateTime, double> prices);
         public abstract double GetCurrentPrice(DateTime currentDate, SortedList<DateTime, OptionPricingData> pricingData);
+        public abstract double GetCurrentDelta(DateTime currentDate, SortedList<DateTime, OptionPricingData> pricingData);
+        public abstract double GetCurrentGamma(DateTime currentDate, SortedList<DateTime, OptionPricingData> pricingData);
 
         #endregion 
 
