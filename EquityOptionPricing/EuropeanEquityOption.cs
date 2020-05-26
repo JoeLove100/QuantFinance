@@ -145,7 +145,7 @@ namespace OptionPricing
 
         public override double GetPayoff(SortedList<DateTime, double> prices)
         {
-            var priceAtExpiry = prices[ExpiryDate];
+            var priceAtExpiry = prices[ExpiryDate.PrevWorkingDay()];
 
             if (IsCall)
             {

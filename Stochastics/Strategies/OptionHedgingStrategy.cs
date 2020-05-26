@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using OptionPricing;
 using Utilities.MarketData;
 
@@ -31,7 +28,7 @@ namespace Stochastics.Strategies
         #region abstract methods
 
         public abstract SortedList<DateTime, ValueTuple<double, double, double>>
-            GetDailyPnl(Queue<KeyValuePair<DateTime, OptionPricingData>> marketData);
+            GetDailyPnl(SortedList<DateTime, OptionPricingData> marketData);
 
         #endregion
     }

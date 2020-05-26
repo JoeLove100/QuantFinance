@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EquityOptionPricing", "Equi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stochastics", "Stochastics\Stochastics.csproj", "{26FB60CA-E491-4B04-8A64-BC659254CB08}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChartingApp", "ChartingApp\ChartingApp.csproj", "{67B47313-25FF-46A6-AE69-50CCC0143F90}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{26FB60CA-E491-4B04-8A64-BC659254CB08}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{26FB60CA-E491-4B04-8A64-BC659254CB08}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{26FB60CA-E491-4B04-8A64-BC659254CB08}.Release|Any CPU.Build.0 = Release|Any CPU
+		{67B47313-25FF-46A6-AE69-50CCC0143F90}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{67B47313-25FF-46A6-AE69-50CCC0143F90}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{67B47313-25FF-46A6-AE69-50CCC0143F90}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{67B47313-25FF-46A6-AE69-50CCC0143F90}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

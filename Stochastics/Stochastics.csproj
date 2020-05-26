@@ -56,6 +56,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StochasticEngine.cs" />
     <Compile Include="Strategies\DeltaHedging.cs" />
+    <Compile Include="Strategies\HedgedPortfolio.cs" />
     <Compile Include="Strategies\OptionHedgingStrategy.cs" />
   </ItemGroup>
   <ItemGroup>

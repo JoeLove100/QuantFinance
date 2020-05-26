@@ -23,6 +23,11 @@ namespace Stochastics
             RandomGenerator = randomGenerator;
         }
 
+        public Sampler(int? seed)
+        {
+            RandomGenerator = new BasicRandomNumberGenerator(seed);
+        }
+
         #endregion
 
         #region fields

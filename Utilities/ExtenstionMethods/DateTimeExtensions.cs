@@ -49,6 +49,11 @@ namespace Utilities.ExtenstionMethods
             var dayCount = 0;
             var currentDate = startDate;
 
+            if (!startDate.IsWorkingDay())
+            {
+                currentDate = currentDate.AddWorkingDay();
+            }
+
             while(currentDate <= futureDate)
             {
                 dayCount += 1;
@@ -56,6 +61,34 @@ namespace Utilities.ExtenstionMethods
             }
 
             return dayCount;
+        }
+
+        public static bool IsWorkingDay(this DateTime currentDate)
+        {
+            if (currentDate.DayOfWeek is DayOfWeek.Saturday || currentDate.DayOfWeek is DayOfWeek.Sunday)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+        public static DateTime PrevWorkingDay(this DateTime currentDate)
+        {
+            if (currentDate.DayOfWeek is DayOfWeek.Saturday)
+            {
+                return currentDate.AddDays(-1);
+            }
+            else if (currentDate.DayOfWeek is DayOfWeek.Sunday)
+            {
+                return currentDate.AddDays(-2);
+            }
+            else
+            {
+                return currentDate;
+            }
         }
     }
 }

@@ -102,6 +102,11 @@ namespace Utilities.ExtenstionMethods
             var counter = 0;
             var currentDate = startDate;
 
+            if (!currentDate.IsWorkingDay())
+            {
+                currentDate = currentDate.AddWorkingDay();
+            }
+
             while (counter < currentList.Count)
             {
                 businessDaySeries.Add(currentDate, currentList[counter]);

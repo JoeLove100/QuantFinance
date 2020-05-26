@@ -70,7 +70,7 @@ namespace Tests.TestOptionPricing
             var result = option.GetPriceBSModel(currentDate, pricingData);
 
             // assert
-            Assert.AreEqual(38.814171, result, 1e-6);
+            Assert.AreEqual(38.839669, result, 1e-6);
         }
 
         [TestMethod]

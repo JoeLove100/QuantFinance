@@ -52,8 +52,8 @@ namespace Tests.TestStochastics
             var result = stochasticEngine.GetBrownianMotionSeries(gbmParams, timePeriod, 7);
 
             // assert
-            var expectedResult = new List<double> {-0.004955, 0.068774, 0.052689, 0.144889, 0.131710,
-                                                    0.224903, 0.278469};
+            var expectedResult = new List<double> {0, -0.004955, 0.068774, 0.052689, 0.144889, 0.131710,
+                                                    0.224903};
             Assert.IsTrue(expectedResult.IsAlmostEqual(result, 1e-6));
         }
 
@@ -69,8 +69,8 @@ namespace Tests.TestStochastics
             var result = stochasticEngine.GetGeometricBrownianSeries(gbpParams, timePeriod, 7);
 
             // assert
-            var expectedResult = new List<double> { 49.390526, 53.245843, 51.950346, 57.166804, 55.956294,
-                                                    61.642971, 64.982546};
+            var expectedResult = new List<double> { 50, 49.390526, 53.245843, 51.950346, 57.166804, 55.956294,
+                                                    61.642971};
             Assert.IsTrue(expectedResult.IsAlmostEqual(result, 1e-6));
         }
 
@@ -87,7 +87,7 @@ namespace Tests.TestStochastics
             var result = stochasticEngine.GetOptionValue(option, currentDate, gbmParams, 0.939413, 100000);
 
             // assert
-            Assert.AreEqual(6.4892, result, 1e-4);
+            Assert.AreEqual(6.4418, result, 1e-4);
 
         }
 
@@ -104,7 +104,7 @@ namespace Tests.TestStochastics
             var result = stochasticEngine.GetOptionValue(option, currentDate, gbmParams, 0.939413, 100000);
 
             // assert
-            Assert.AreEqual(3.7813, result, 1e-4);
+            Assert.AreEqual(3.7670, result, 1e-4);
 
         }
 
@@ -121,7 +121,7 @@ namespace Tests.TestStochastics
             var result = stochasticEngine.GetOptionValue(option, currentDate, gbmParams, 0.966378, 100000);
 
             // assert
-            Assert.AreEqual(32.0434, result, 1e-4);
+            Assert.AreEqual(31.8568, result, 1e-4);
         }
 
         [TestMethod]
@@ -137,7 +137,7 @@ namespace Tests.TestStochastics
             var result = stochasticEngine.GetOptionValue(option, currentDate, gbmParams, 0.966378, 100000);
 
             // assert
-            Assert.AreEqual(42.5441, result, 1e-4);
+            Assert.AreEqual(42.7009, result, 1e-4);
         }
 
         [TestMethod]
@@ -153,7 +153,7 @@ namespace Tests.TestStochastics
             var result = stochasticEngine.GetOptionValue(option, currentDate, gbmParams, 1, 100000);
 
             // assert
-            Assert.AreEqual(0.49296, result, 1e-4);
+            Assert.AreEqual(0.49229, result, 1e-4);
         }
 
         [TestMethod]
@@ -169,7 +169,7 @@ namespace Tests.TestStochastics
             var result = stochasticEngine.GetOptionValue(option, currentDate, gbmParams, 1, 100000);
 
             // assert
-            Assert.AreEqual(0.4484, result, 1e-4);
+            Assert.AreEqual(0.4465, result, 1e-4);
         }
 
         #endregion

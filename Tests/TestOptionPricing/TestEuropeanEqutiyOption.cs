@@ -69,7 +69,7 @@ namespace Tests.TestOptionPricing
             var result = EqOption.GetPriceBSModel(currentDate, pricingData);
 
             // assert
-            Assert.AreEqual(4.241538, result, 1e-6);
+            Assert.AreEqual(4.232867, result, 1e-6);
         }
 
         [TestMethod]
@@ -84,7 +84,7 @@ namespace Tests.TestOptionPricing
             var result = EqOption.GetPriceBSModel(currentDate, pricingData);
 
             // assert
-            Assert.AreEqual(2.968755, result, 1e-6);
+            Assert.AreEqual(2.963187, result, 1e-6);
         }
 
         [TestMethod]

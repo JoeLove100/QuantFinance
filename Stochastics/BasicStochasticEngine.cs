@@ -22,6 +22,10 @@ namespace Stochastics
 
         }
 
+        #endregion
+
+        #region overrides
+
         public override List<double> GetBrownianMotionSeries(GbmParameters parameters,
                                                              double timeStep, 
                                                              int length)
@@ -34,8 +38,8 @@ namespace Stochastics
             /// <paramref name="length"/> number of observations to be generated
             ///</summary>
         {
-            var brownianMotion = new List<double>();
-            var standardNormalNumbers = Sampler.GetRandStandardNormal(length);
+            var brownianMotion = new List<double> { 0 };
+            var standardNormalNumbers = Sampler.GetRandStandardNormal(length - 1);
             double prev = 0;
             
             foreach(double x in standardNormalNumbers)
@@ -48,10 +52,6 @@ namespace Stochastics
             return brownianMotion;
             
         }
-
-        #endregion
-
-        #region overrides
 
         public override List<double> GetGeometricBrownianSeries(GbmParameters parameters,
                                                                 double timestep,
