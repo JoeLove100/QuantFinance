@@ -31,8 +31,8 @@ namespace Stochastics.Strategies
         public ValueTuple<double, double, double> CurrentValue(DateTime currentDate,
                                                                SortedList<DateTime, OptionPricingData> availableHistory)
         {
-            var optionsValue = _option.GetCurrentPrice(currentDate, availableHistory);
-            var hedgeValue = -_option.GetCurrentDelta(currentDate, availableHistory) * _numberOfContracts;
+            var optionsValue = _option.GetCurrentPrice(currentDate, availableHistory) * _numberOfContracts;
+            var hedgeValue = -_option.GetCurrentDelta(currentDate, availableHistory) * optionsValue;
             var bankAccountValue = -(optionsValue + hedgeValue);
 
             return new ValueTuple<double, double, double>(optionsValue, hedgeValue, bankAccountValue);
@@ -46,10 +46,10 @@ namespace Stochastics.Strategies
         {
             var timePeriod = currentDate.GetWorkingDaysTo(nextDate) / TimePeriods.BusinessDaysInYear;
 
-            var newOptionsValue = _option.GetCurrentPrice(nextDate, availableHistory);
+            var newOptionsValue = _option.GetCurrentPrice(nextDate, availableHistory) * _numberOfContracts;
             var newHedgeValue = hedgeValue * (availableHistory[nextDate].CurrentPrice / availableHistory[currentDate].CurrentPrice);
             newHedgeValue *= Math.Exp(availableHistory[currentDate].DivYield * timePeriod);  // incremental div yield
-            var newBankAccountValue = bankAccountValue * (Math.Exp(availableHistory[currentDate].InterestRate * timePeriod) - 1);
+            var newBankAccountValue = bankAccountValue * Math.Exp(availableHistory[currentDate].InterestRate * timePeriod);
 
             return new ValueTuple<double, double, double>(newOptionsValue, newHedgeValue, newBankAccountValue);
         }
