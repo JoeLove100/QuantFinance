@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Utilities.MarketData;
 using Utilities.ExtenstionMethods;
 
@@ -100,6 +96,7 @@ namespace OptionPricing
         public abstract double GetCurrentPrice(DateTime currentDate, SortedList<DateTime, OptionPricingData> pricingData);
         public abstract double GetCurrentDelta(DateTime currentDate, SortedList<DateTime, OptionPricingData> pricingData);
         public abstract double GetCurrentGamma(DateTime currentDate, SortedList<DateTime, OptionPricingData> pricingData);
+        public abstract bool IsInTheMoney(DateTime currentDate, SortedList<DateTime, OptionPricingData> pricingData);
 
         #endregion 
 

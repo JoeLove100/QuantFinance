@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using Utilities.MarketData;
-using Utilities.ExtenstionMethods;
 using OptionPricing;
+using Utilities.ExtenstionMethods;
 
 namespace Stochastics.Strategies
 {
-    public class HedgedPortfolio
+    public abstract class HedgedPortfolio
     {
         #region constructor
 
@@ -26,25 +26,15 @@ namespace Stochastics.Strategies
 
         #endregion
 
-        #region public methods
+        #region virtual methods
 
-        public ValueTuple<double, double, double> CurrentValue(DateTime currentDate,
-                                                               SortedList<DateTime, OptionPricingData> availableHistory)
+        public virtual ValueTuple<double, double, double> NextValue(DateTime currentDate,
+                                                                    DateTime nextDate,
+                                                                    SortedList<DateTime, OptionPricingData> availableHistory,
+                                                                    double hedgeValue,
+                                                                    double bankAccountValue)
         {
-            var optionsValue = _option.GetCurrentPrice(currentDate, availableHistory) * _numberOfContracts;
-            var hedgeValue = -_option.GetCurrentDelta(currentDate, availableHistory) * _numberOfContracts * availableHistory[currentDate].CurrentPrice;
-            var bankAccountValue = -(optionsValue + hedgeValue);
-
-            return new ValueTuple<double, double, double>(optionsValue, hedgeValue, bankAccountValue);
-        }
-
-        public ValueTuple<double, double, double> NextValue(DateTime currentDate,
-                                                            DateTime nextDate,
-                                                            SortedList<DateTime, OptionPricingData> availableHistory,
-                                                            double hedgeValue,
-                                                            double bankAccountValue)
-        {
-            var timePeriod = (double) currentDate.GetWorkingDaysTo(nextDate) / TimePeriods.BusinessDaysInYear;
+            var timePeriod = (double)currentDate.GetWorkingDaysTo(nextDate) / TimePeriods.BusinessDaysInYear;
 
             var newOptionsValue = _option.GetCurrentPrice(nextDate, availableHistory) * _numberOfContracts;
             var newHedgeValue = hedgeValue * (availableHistory[nextDate].CurrentPrice / availableHistory[currentDate].CurrentPrice);
@@ -53,6 +43,13 @@ namespace Stochastics.Strategies
 
             return new ValueTuple<double, double, double>(newOptionsValue, newHedgeValue, newBankAccountValue);
         }
+
+        #endregion 
+
+        #region abstract methods
+
+        public abstract ValueTuple<double, double, double> CurrentValue(DateTime currentDate,
+                                                               SortedList<DateTime, OptionPricingData> availableHistory);
 
         #endregion 
     }

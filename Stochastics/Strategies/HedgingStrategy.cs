@@ -5,14 +5,13 @@ using Utilities.MarketData;
 
 namespace Stochastics.Strategies
 {
-    public class DeltaHedging : OptionHedgingStrategy
+    public class HedgingStrategy
     {
         #region constructor
 
-        public DeltaHedging(EquityOption option, 
-                            int contractNumbers) : base(option, contractNumbers)
+        public HedgingStrategy(HedgedPortfolio portfolio )
         {
-            Portfolio = new HedgedPortfolio(option, contractNumbers);
+            Portfolio = portfolio;
         }
 
         #endregion
@@ -25,7 +24,7 @@ namespace Stochastics.Strategies
 
         #region overrides
 
-        public override SortedList<DateTime, ValueTuple<double, double, double>> 
+        public SortedList<DateTime, ValueTuple<double, double, double>> 
             GetDailyPnl(SortedList<DateTime, OptionPricingData> marketData)
         {
 

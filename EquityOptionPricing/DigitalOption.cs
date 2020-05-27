@@ -158,6 +158,19 @@ namespace OptionPricing
             throw new NotImplementedException();
         }
 
-        #endregion 
+        public override bool IsInTheMoney(DateTime currentDate, SortedList<DateTime, OptionPricingData> pricingData)
+        {
+            var currentIndexLevel = pricingData[currentDate].CurrentPrice;
+            if (IsCall)
+            {
+                return currentIndexLevel > Strike;
+            }
+            else
+            {
+                return currentIndexLevel < Strike;
+            }
+        }
+
+        #endregion
     }
 }

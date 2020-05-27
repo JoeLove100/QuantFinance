@@ -13,11 +13,11 @@ namespace Tests.TestStochastics
 
         #region fixtures
 
-        public HedgedPortfolio GetPortfolio()
+        private DeltaHedgedPortfolio GetDeltaHedgedPortfolio()
         {
             var expiryDate = new DateTime(2020, 6, 30);
             var option = new EuropeanEquityOption(@"Test asset", expiryDate, 1000, false, "Test curve");
-            var portfolio = new HedgedPortfolio(option, 3);
+            var portfolio = new DeltaHedgedPortfolio(option, 3);
             return portfolio;
         }
 
@@ -27,7 +27,7 @@ namespace Tests.TestStochastics
         public void TestGetCurrentValue()
         {
             // arrange
-            var portfolio = GetPortfolio();
+            var portfolio = GetDeltaHedgedPortfolio();
             var currentDate = new DateTime(2020, 5, 1);
             var availableHistory = new SortedList<DateTime, OptionPricingData>
             {
@@ -47,7 +47,7 @@ namespace Tests.TestStochastics
         public void TestGetNextValue()
         {
             // arrange
-            var portfolio = GetPortfolio();
+            var portfolio = GetDeltaHedgedPortfolio();
             var currentDate = new DateTime(2020, 5, 1);
             var nextDate = new DateTime(2020, 5, 4);
             var availableHistory = new SortedList<DateTime, OptionPricingData>

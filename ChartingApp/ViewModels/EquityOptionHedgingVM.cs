@@ -20,7 +20,7 @@ namespace ChartingApp.ViewModels
 
         public EquityOptionHedgingVM(EquityOption option,
                                      StochasticEngine stochasticEngine,
-                                     OptionHedgingStrategy hedgingStrategy)
+                                     HedgingStrategy hedgingStrategy)
         {
             Option = option;
             StochasticEngine = stochasticEngine;
@@ -52,7 +52,7 @@ namespace ChartingApp.ViewModels
         private readonly SortedList<DateTime, OptionPricingData> PricingData;
         private EquityOption Option { get; }
         private StochasticEngine StochasticEngine { get; }
-        private OptionHedgingStrategy HedgingStrategy { get; }
+        private HedgingStrategy HedgingStrategy { get; }
         private PlotModel _plotModel;
         public PlotModel PlotModel
         {

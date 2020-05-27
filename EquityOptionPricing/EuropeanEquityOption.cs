@@ -6,7 +6,7 @@ using Utilities.ExtenstionMethods;
 
 namespace OptionPricing
 {
-    public class EuropeanEquityOption: EquityOption
+    public class EuropeanEquityOption : EquityOption
     {
 
         #region constructors
@@ -44,7 +44,7 @@ namespace OptionPricing
                 var price = discountedStrike * Normal.CDF(0, 1, -d2) - divAdjustedCurrentPrice * Normal.CDF(0, 1, -d1);
                 return price;
             }
-            
+
         }
 
         public double GetDelta(DateTime currentDate,
@@ -68,7 +68,7 @@ namespace OptionPricing
         {
             var timePeriod = GetTimePeriodToExpiry(currentDate);
             var d1 = GetD1(timePeriod, pricingData);
-            var gamma = Math.Exp(-pricingData.DivYield * timePeriod) * Normal.PDF(0, 1, d1) / 
+            var gamma = Math.Exp(-pricingData.DivYield * timePeriod) * Normal.PDF(0, 1, d1) /
                 (pricingData.CurrentPrice * pricingData.Vol * Math.Sqrt(timePeriod));
             return gamma;
         }
@@ -78,7 +78,7 @@ namespace OptionPricing
         {
             var timePeriod = GetTimePeriodToExpiry(currentDate);
             var d1 = GetD1(timePeriod, pricingData);
-            var vega = Math.Exp(-pricingData.DivYield * timePeriod) * pricingData.CurrentPrice 
+            var vega = Math.Exp(-pricingData.DivYield * timePeriod) * pricingData.CurrentPrice
                 * Math.Sqrt(timePeriod) * Normal.PDF(0, 1, d1) / 100;
             return vega;
         }
@@ -107,11 +107,11 @@ namespace OptionPricing
 
             if (IsCall)
             {
-                var term1 = -Math.Exp(-pricingData.DivYield * timePeriod) * pricingData.CurrentPrice * Normal.PDF(0, 1, d1) 
+                var term1 = -Math.Exp(-pricingData.DivYield * timePeriod) * pricingData.CurrentPrice * Normal.PDF(0, 1, d1)
                     * pricingData.Vol / (2 * Math.Sqrt(timePeriod));
                 var term2 = pricingData.InterestRate * Strike * Math.Exp(-pricingData.InterestRate * timePeriod)
                     * Normal.CDF(0, 1, d2);
-                var term3 = pricingData.DivYield * pricingData.CurrentPrice * Math.Exp(-pricingData.DivYield * timePeriod) 
+                var term3 = pricingData.DivYield * pricingData.CurrentPrice * Math.Exp(-pricingData.DivYield * timePeriod)
                     * Normal.CDF(0, 1, d1);
                 var theta = term1 - term2 + term3;
 
@@ -123,7 +123,7 @@ namespace OptionPricing
                     * pricingData.Vol / (2 * Math.Sqrt(timePeriod));
                 var term2 = pricingData.InterestRate * Strike * Math.Exp(-pricingData.InterestRate * timePeriod)
                     * (Normal.CDF(0, 1, d2) - 1);
-                var term3 = pricingData.DivYield * pricingData.CurrentPrice * Math.Exp(-pricingData.DivYield * timePeriod) 
+                var term3 = pricingData.DivYield * pricingData.CurrentPrice * Math.Exp(-pricingData.DivYield * timePeriod)
                     * (Normal.CDF(0, 1, d1) - 1);
                 var theta = term1 - term2 + term3;
 
@@ -155,9 +155,9 @@ namespace OptionPricing
             {
                 return Math.Max(0, Strike - priceAtExpiry);
             }
-            
+
         }
-        
+
         public override double GetCurrentPrice(DateTime currentDate, SortedList<DateTime, OptionPricingData> pricingData)
         {
             if (currentDate == ExpiryDate)
@@ -180,7 +180,20 @@ namespace OptionPricing
             return GetGamma(currentDate, pricingData[currentDate]);
         }
 
-        #endregion
+        public override bool IsInTheMoney(DateTime currentDate, SortedList<DateTime, OptionPricingData> pricingData)
+        {
+            var currentIndexLevel = pricingData[currentDate].CurrentPrice;
+            if (IsCall)
+            {
+                return currentIndexLevel > Strike;
+            }
+            else
+            {
+                return currentIndexLevel < Strike;
+            }
 
+            #endregion
+
+        }
     }
 }
