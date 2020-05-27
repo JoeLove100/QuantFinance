@@ -55,7 +55,7 @@ namespace Tests.TestOptionPricing
             var result = option.GetPriceBSModel(currentDate, pricingData);
 
             // assert
-            Assert.AreEqual(61.736323, result, 1e-6);
+            Assert.AreEqual(61.711724, result, 1e-6);
         }
 
         [TestMethod]
@@ -70,7 +70,7 @@ namespace Tests.TestOptionPricing
             var result = option.GetPriceBSModel(currentDate, pricingData);
 
             // assert
-            Assert.AreEqual(38.839669, result, 1e-6);
+            Assert.AreEqual(38.865210, result, 1e-6);
         }
 
         [TestMethod]
@@ -85,7 +85,7 @@ namespace Tests.TestOptionPricing
             var result = option.GetPriceBSModel(currentDate, pricingData);
 
             // assert
-            Assert.AreEqual(0.467207, result, 1e-6);
+            Assert.AreEqual(0.467494, result, 1e-6);
         }
 
         [TestMethod]
@@ -100,7 +100,7 @@ namespace Tests.TestOptionPricing
             var result = option.GetPriceBSModel(currentDate, pricingData);
 
             // assert
-            Assert.AreEqual(0.509547, result, 1e-6);
+            Assert.AreEqual(0.509378, result, 1e-6);
         }
 
         [TestMethod]
@@ -119,7 +119,7 @@ namespace Tests.TestOptionPricing
             var sum = callPrice + putPrice;
 
             // assert
-            var paritySum = 0.929266;  // should just be the discount factor
+            var paritySum = 0.929526;  // should just be the discount factor
             Assert.AreEqual(paritySum, sum, 1e-6);
         }
 
@@ -138,7 +138,7 @@ namespace Tests.TestOptionPricing
             var sum = callPrice + putPrice;
 
             // assert
-            var paritySum = 96.18953;  // should be discounted forward rate
+            var paritySum = 96.204922;  // should be discounted forward rate
             Assert.AreEqual(paritySum, sum, 1e-6);
         }
 
@@ -266,7 +266,7 @@ namespace Tests.TestOptionPricing
             var result = option.GetCurrentDelta(currentDate, pricingData);
 
             // assert
-            Assert.AreEqual(5.832970, result, 1e-6);
+            Assert.AreEqual(5.820470, result, 1e-6);
         }
 
         [TestMethod]
@@ -281,7 +281,7 @@ namespace Tests.TestOptionPricing
             var result = option.GetCurrentDelta(currentDate, pricingData);
 
             // assert
-            Assert.AreEqual(-4.83297, result, 1e-6);
+            Assert.AreEqual(-4.820470, result, 1e-6);
         }
 
         [TestMethod]
@@ -296,7 +296,7 @@ namespace Tests.TestOptionPricing
             var result = option.GetCurrentDelta(currentDate, pricingData);
 
             // assert
-            Assert.AreEqual(0.052339, result, 1e-6);
+            Assert.AreEqual(0.052282, result, 1e-6);
         }
 
         [TestMethod]
@@ -311,7 +311,7 @@ namespace Tests.TestOptionPricing
             var result = option.GetCurrentDelta(currentDate, pricingData);
 
             // assert
-            Assert.AreEqual(-0.052339, result, 1e-6);
+            Assert.AreEqual(-0.0522816, result, 1e-6);
         }
 
         #endregion 

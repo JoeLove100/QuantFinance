@@ -73,16 +73,22 @@ namespace ChartingApp.ViewModels
             var pricingData = GenerateOptionPricingData(startDate, gbmParameters, constantVol, constantInterest, constantDivYield);
             var pnl = HedgingStrategy.GetDailyPnl(pricingData);
 
-            var series = new ColumnSeries();
+            var optionSeries = new ColumnSeries() { IsStacked=true};
+            var hedgeSeries = new ColumnSeries() { IsStacked = true };
+            var cashSeries = new ColumnSeries() { IsStacked = true };
             foreach (KeyValuePair<DateTime, (double, double, double)> dailyPnl in pnl)
             {
                 // TODO: plot different PnL elements seperately
                 (double optionPnl, double hedgePnl, double cashPnl) = dailyPnl.Value;
-                series.Items.Add(new ColumnItem { Value = optionPnl + hedgePnl + cashPnl });
+                optionSeries.Items.Add(new ColumnItem(optionPnl));
+                hedgeSeries.Items.Add(new ColumnItem(hedgePnl));
+                cashSeries.Items.Add(new ColumnItem(cashPnl));
             }
 
             PlotModel.Series.Clear();
-            PlotModel.Series.Add(series);
+            PlotModel.Series.Add(optionSeries);
+            PlotModel.Series.Add(hedgeSeries);
+            PlotModel.Series.Add(cashSeries);
         }
 
         #endregion 

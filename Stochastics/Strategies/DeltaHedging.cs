@@ -54,8 +54,8 @@ namespace Stochastics.Strategies
                 var hedgeChange = newHedgeValue - hedgeValue;
                 var cashChange = newBankAccountValue - bankAccountValue;
                 dailyPnl.Add(nextData.Key, new ValueTuple<double, double, double>(optionChange, hedgeChange, cashChange));
+                currentData = nextData;
             }
-            
 
             return dailyPnl;
         }

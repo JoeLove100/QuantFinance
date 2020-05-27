@@ -54,7 +54,7 @@ namespace Utilities.ExtenstionMethods
                 currentDate = currentDate.AddWorkingDay();
             }
 
-            while(currentDate <= futureDate)
+            while(currentDate < futureDate)
             {
                 dayCount += 1;
                 currentDate = currentDate.AddWorkingDay();

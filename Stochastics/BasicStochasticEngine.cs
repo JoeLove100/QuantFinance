@@ -95,7 +95,7 @@ namespace Stochastics
             ///</summary>
         {
             var simulatedValues = new List<double>();
-            var simulationLengthDays = currentDate.GetWorkingDaysTo(option.ExpiryDate);
+            var simulationLengthDays = currentDate.GetWorkingDaysTo(option.ExpiryDate) + 1;
             var dailyTimePeriod = 1.0 / TimePeriods.BusinessDaysInYear;
 
             for (int i = 0; i < numberSims; i++)

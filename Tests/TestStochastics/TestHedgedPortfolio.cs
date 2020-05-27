@@ -38,9 +38,9 @@ namespace Tests.TestStochastics
             var (optionValue, hedgeValue, bankAccountValue) = portfolio.CurrentValue(currentDate, availableHistory);
 
             // assert
-            Assert.AreEqual(105.068766, optionValue, 1e-6);
-            Assert.AreEqual(41.089092, hedgeValue, 1e-6);
-            Assert.AreEqual(-146.157858, bankAccountValue, 1e-6);
+            Assert.AreEqual(103.641378, optionValue, 1e-6);
+            Assert.AreEqual(1195.805281, hedgeValue, 1e-6);
+            Assert.AreEqual(-1299.446659, bankAccountValue, 1e-6);
         }
 
         [TestMethod]
@@ -58,12 +58,12 @@ namespace Tests.TestStochastics
 
             // act
             var (newOptionsValue, newHedgeValue, newBankAccountValue) = portfolio.NextValue(currentDate, nextDate, availableHistory,
-                                                                                            41.08909216, -146.1578583);
+                                                                                            1195.805281, -1299.446659);
 
             // assert
-            Assert.AreEqual(37.739245, newOptionsValue, 1e-6);
-            Assert.AreEqual(44.311766, newHedgeValue, 1e-6);
-            Assert.AreEqual(-146.157858, newBankAccountValue, 1e-6);
+            Assert.AreEqual(36.651980, newOptionsValue, 1e-6);
+            Assert.AreEqual(1289.697102, newHedgeValue, 1e-6);
+            Assert.AreEqual(-1299.706574, newBankAccountValue, 1e-6);
         }
     }
 }

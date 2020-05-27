@@ -32,7 +32,7 @@ namespace Stochastics.Strategies
                                                                SortedList<DateTime, OptionPricingData> availableHistory)
         {
             var optionsValue = _option.GetCurrentPrice(currentDate, availableHistory) * _numberOfContracts;
-            var hedgeValue = -_option.GetCurrentDelta(currentDate, availableHistory) * optionsValue;
+            var hedgeValue = -_option.GetCurrentDelta(currentDate, availableHistory) * _numberOfContracts * availableHistory[currentDate].CurrentPrice;
             var bankAccountValue = -(optionsValue + hedgeValue);
 
             return new ValueTuple<double, double, double>(optionsValue, hedgeValue, bankAccountValue);
@@ -44,7 +44,7 @@ namespace Stochastics.Strategies
                                                             double hedgeValue,
                                                             double bankAccountValue)
         {
-            var timePeriod = currentDate.GetWorkingDaysTo(nextDate) / TimePeriods.BusinessDaysInYear;
+            var timePeriod = (double) currentDate.GetWorkingDaysTo(nextDate) / TimePeriods.BusinessDaysInYear;
 
             var newOptionsValue = _option.GetCurrentPrice(nextDate, availableHistory) * _numberOfContracts;
             var newHedgeValue = hedgeValue * (availableHistory[nextDate].CurrentPrice / availableHistory[currentDate].CurrentPrice);

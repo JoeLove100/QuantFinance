@@ -69,7 +69,7 @@ namespace Tests.TestOptionPricing
             var result = EqOption.GetPriceBSModel(currentDate, pricingData);
 
             // assert
-            Assert.AreEqual(4.232867, result, 1e-6);
+            Assert.AreEqual(4.224185, result, 1e-6);
         }
 
         [TestMethod]
@@ -84,7 +84,7 @@ namespace Tests.TestOptionPricing
             var result = EqOption.GetPriceBSModel(currentDate, pricingData);
 
             // assert
-            Assert.AreEqual(2.963187, result, 1e-6);
+            Assert.AreEqual(2.957613, result, 1e-6);
         }
 
         [TestMethod]
@@ -102,7 +102,7 @@ namespace Tests.TestOptionPricing
             var difference = callPrice - putPrice;
 
             // act
-            var parityImpliedDifference = -4.949466;
+            var parityImpliedDifference = -4.951660;
             Assert.AreEqual(parityImpliedDifference, difference, 1e-6);
         }
 
@@ -174,7 +174,7 @@ namespace Tests.TestOptionPricing
             var result = option.GetDelta(currentDate, pricingData);
 
             // asset
-            Assert.AreEqual(0.455130, result, 1e-6);
+            Assert.AreEqual(0.454747, result, 1e-6);
         }
 
         [TestMethod]
@@ -189,7 +189,7 @@ namespace Tests.TestOptionPricing
             var result = option.GetDelta(currentDate, pricingData);
 
             // asset
-            Assert.AreEqual(-0.521624, result, 1e-6);
+            Assert.AreEqual(-0.522125, result, 1e-6);
         }
 
         [TestMethod]
@@ -204,7 +204,7 @@ namespace Tests.TestOptionPricing
             var result = option.GetGamma(currentDate, pricingData);
 
             // asset
-            Assert.AreEqual(0.041960, result, 1e-6);
+            Assert.AreEqual(0.042069, result, 1e-6);
         }
 
         [TestMethod]
@@ -219,7 +219,7 @@ namespace Tests.TestOptionPricing
             var result = option.GetVega(currentDate, pricingData);
 
             // asset
-            Assert.AreEqual(0.163291, result, 1e-6);
+            Assert.AreEqual(0.162878, result, 1e-6);
         }
 
         [TestMethod]
@@ -234,7 +234,7 @@ namespace Tests.TestOptionPricing
             var result = option.GetRho(currentDate, pricingData);
 
             // asset
-            Assert.AreEqual(0.146873, result, 1e-6);
+            Assert.AreEqual(0.146061, result, 1e-6);
         }
 
         [TestMethod]
@@ -249,7 +249,7 @@ namespace Tests.TestOptionPricing
             var result = option.GetRho(currentDate, pricingData);
 
             // asset
-            Assert.AreEqual(-0.230058, result, 1e-6);
+            Assert.AreEqual(-0.229021, result, 1e-6);
         }
 
         [TestMethod]
@@ -264,7 +264,7 @@ namespace Tests.TestOptionPricing
             var result = option.GetTheta(currentDate, pricingData);
 
             // asset
-            Assert.AreEqual(-0.010317, result, 1e-6);
+            Assert.AreEqual(-0.010341, result, 1e-6);
         }
 
         [TestMethod]
@@ -279,7 +279,7 @@ namespace Tests.TestOptionPricing
             var result = option.GetTheta(currentDate, pricingData);
 
             // asset
-            Assert.AreEqual(-0.006269, result, 1e-6);
+            Assert.AreEqual(-0.006292, result, 1e-6);
         }
 
         #endregion
