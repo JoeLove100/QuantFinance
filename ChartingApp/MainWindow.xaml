@@ -4,6 +4,11 @@
         xmlns:oxy="http://oxyplot.org/wpf"
         Title="Quant Finance" Height="450" Width="800">
     <Grid>
-        <oxy:PlotView x:Name="HedgePlot" Model="{Binding PlotModel}" ></oxy:PlotView>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <oxy:PlotView Grid.Row="0" x:Name="DailyPnl" Model="{Binding PlotModelDaily}" ></oxy:PlotView>
+        <oxy:PlotView Grid.Row="1" x:Name="CumulativePnl" Model="{Binding PlotModelCumulative}" ></oxy:PlotView>
     </Grid>
 </Window>

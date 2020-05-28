@@ -25,12 +25,13 @@ namespace ChartingApp.ViewModels
             Option = option;
             StochasticEngine = stochasticEngine;
             HedgingStrategy = hedgingStrategy;
-            PlotModel = new PlotModel();
+            PlotModelDaily = new PlotModel();
+            PlotModelCumulative = new PlotModel();
         }
 
         public EquityOptionHedgingVM(string inputDataCsv)
         {
-            PlotModel = new PlotModel();
+            PlotModelDaily = new PlotModel();
             PricingData = ReadOptionPricingData(inputDataCsv);
         }
 
@@ -53,11 +54,19 @@ namespace ChartingApp.ViewModels
         private EquityOption Option { get; }
         private StochasticEngine StochasticEngine { get; }
         private HedgingStrategy HedgingStrategy { get; }
-        private PlotModel _plotModel;
-        public PlotModel PlotModel
+
+        private PlotModel _plotModelDaily;
+        public PlotModel PlotModelDaily
         {
-            get { return _plotModel; }
-            set { _plotModel = value; OnPropertyChanged("PlotModel"); }
+            get { return _plotModelDaily; }
+            set { _plotModelDaily = value; OnPropertyChanged("PlotModelDaily"); }
+        }
+
+        private PlotModel _plotModelCumulative;
+        public PlotModel PlotModelCumulative
+        {
+            get { return _plotModelCumulative; }
+            set { _plotModelCumulative = value; OnPropertyChanged("PlotModelCumulative"); }
         }
         #endregion
 
@@ -76,6 +85,8 @@ namespace ChartingApp.ViewModels
             var optionSeries = new ColumnSeries() { IsStacked=true};
             var hedgeSeries = new ColumnSeries() { IsStacked = true };
             var cashSeries = new ColumnSeries() { IsStacked = true };
+            var cumulativePnl = new List<double>();
+
             foreach (KeyValuePair<DateTime, (double, double, double)> dailyPnl in pnl)
             {
                 // TODO: plot different PnL elements seperately
@@ -83,12 +94,30 @@ namespace ChartingApp.ViewModels
                 optionSeries.Items.Add(new ColumnItem(optionPnl));
                 hedgeSeries.Items.Add(new ColumnItem(hedgePnl));
                 cashSeries.Items.Add(new ColumnItem(cashPnl));
+                var totalPnL = optionPnl + hedgePnl + cashPnl;
+
+                if (cumulativePnl.Count == 0)
+                {
+                    cumulativePnl.Add(totalPnL);
+                }
+                else
+                {
+                    cumulativePnl.Add(cumulativePnl[cumulativePnl.Count - 1] + totalPnL); 
+                }
             }
 
-            PlotModel.Series.Clear();
-            PlotModel.Series.Add(optionSeries);
-            PlotModel.Series.Add(hedgeSeries);
-            PlotModel.Series.Add(cashSeries);
+            PlotModelDaily.Series.Clear();
+            PlotModelDaily.Series.Add(optionSeries);
+            PlotModelDaily.Series.Add(hedgeSeries);
+            PlotModelDaily.Series.Add(cashSeries);
+
+            PlotModelCumulative.Series.Clear();
+            var cumulativeSeries = new ColumnSeries();
+            foreach(double dailyVal in cumulativePnl)
+            {
+                cumulativeSeries.Items.Add(new ColumnItem(dailyVal));
+            }
+            PlotModelCumulative.Series.Add(cumulativeSeries);
         }
 
         #endregion 

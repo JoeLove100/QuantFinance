@@ -48,12 +48,12 @@ namespace ChartingApp
         private void SetViewModel()
         {
             var expiryDate = new DateTime(2020, 3, 31);
-            EuropeanEquityOption option = new EuropeanEquityOption("Test underlying", expiryDate, 60, false, "Test curve");
+            EuropeanEquityOption option = new EuropeanEquityOption("Test underlying", expiryDate, 60, true, "Test curve");
             BasicStochasticEngine stochasticEngine = new BasicStochasticEngine(new Sampler(1234));
-            HedgingStrategy hedgingStrategy = new HedgingStrategy(new DeltaHedgedPortfolio(option, 1));
+            HedgingStrategy hedgingStrategy = new HedgingStrategy(new StopLossPortfolio(option, 1));
             ViewModel = new EquityOptionHedgingVM(option, stochasticEngine, hedgingStrategy);
 
-            ViewModel.PlotDailyPnL(new DateTime(2020, 1, 1), 60, 0.1, 0.04, 0.02);
+            ViewModel.PlotDailyPnL(new DateTime(2020, 1, 1), 55, 0.1, 0.04, 0.02);
         }
 
         #endregion 
