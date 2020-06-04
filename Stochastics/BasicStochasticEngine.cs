@@ -28,7 +28,8 @@ namespace Stochastics
 
         public override List<double> GetBrownianMotionSeries(GbmParameters parameters,
                                                              double timeStep, 
-                                                             int length)
+                                                             int length,
+                                                             int? seed = null)
             ///<summary>
             /// Returns a list of size length consisting of observations of 
             /// a brownian motion 
@@ -39,7 +40,7 @@ namespace Stochastics
             ///</summary>
         {
             var brownianMotion = new List<double> { 0 };
-            var standardNormalNumbers = Sampler.GetRandStandardNormal(length - 1);
+            var standardNormalNumbers = Sampler.GetRandStandardNormal(length - 1, seed);
             double prev = 0;
             
             foreach(double x in standardNormalNumbers)
@@ -55,7 +56,8 @@ namespace Stochastics
 
         public override List<double> GetGeometricBrownianSeries(GbmParameters parameters,
                                                                 double timestep,
-                                                                int length)
+                                                                int length,
+                                                                int? seed = null)
             ///<summary>
             /// generates a series of observations of a geometric brownian 
             /// variable for projecting investable assets
@@ -66,7 +68,7 @@ namespace Stochastics
         {
             var gbSeries = new List<double>();
             var geomParameters = new GbmParameters(parameters.Mean - 0.5 * Math.Pow(parameters.Vol, 2), parameters.Vol);
-            var brownianSeries = GetBrownianMotionSeries(geomParameters, timestep, length);
+            var brownianSeries = GetBrownianMotionSeries(geomParameters, timestep, length, seed);
 
             foreach(double brownianVal in brownianSeries)
             {
@@ -78,10 +80,11 @@ namespace Stochastics
         }
 
         public override List<double> GetStandardBrownianMotionSeries(double timestep, 
-                                                                     int length)
+                                                                     int length,
+                                                                     int? seed = null)
         {
             var standardParameters = new GbmParameters(0, 1);
-            return GetBrownianMotionSeries(standardParameters, timestep, length);
+            return GetBrownianMotionSeries(standardParameters, timestep, length, seed);
         }
 
         public override double GetOptionValue(EquityOption option,

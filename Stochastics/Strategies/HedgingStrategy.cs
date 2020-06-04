@@ -21,7 +21,7 @@ namespace Stochastics.Strategies
 
         public string Name;
         public DateTime ExpiryDate => Portfolio.ExpiryDate;
-        protected HedgedPortfolio Portfolio;
+        public readonly HedgedPortfolio Portfolio;
 
         #endregion
 

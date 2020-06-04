@@ -22,8 +22,8 @@ namespace Stochastics.Strategies
         public override ValueTuple<double, double, double> CurrentValue(DateTime currentDate,
                                                                         SortedList<DateTime, OptionPricingData> availableHistory)
         {
-            var optionsValue = _option.GetCurrentPrice(currentDate, availableHistory) * _numberOfContracts;
-            var hedgeValue = -_option.GetCurrentDelta(currentDate, availableHistory) * _numberOfContracts * availableHistory[currentDate].CurrentPrice;
+            var optionsValue = Option.GetCurrentPrice(currentDate, availableHistory) * _numberOfContracts;
+            var hedgeValue = -Option.GetCurrentDelta(currentDate, availableHistory) * _numberOfContracts * availableHistory[currentDate].CurrentPrice;
             var bankAccountValue = -(optionsValue + hedgeValue);
 
             return new ValueTuple<double, double, double>(optionsValue, hedgeValue, bankAccountValue);

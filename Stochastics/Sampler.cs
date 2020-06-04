@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using MathNet.Numerics.Distributions;
 
 /// <summary>
@@ -23,9 +19,9 @@ namespace Stochastics
             RandomGenerator = randomGenerator;
         }
 
-        public Sampler(int? seed = null)
+        public Sampler()
         {
-            RandomGenerator = new BasicRandomNumberGenerator(seed);
+            RandomGenerator = new BasicRandomNumberGenerator();
         }
 
         #endregion
@@ -38,15 +34,15 @@ namespace Stochastics
 
         #region implementations
 
-        public List<double> GetRandUniform(double lowerBound, double upperBound, int length)
+        public List<double> GetRandUniform(double lowerBound, double upperBound, int length, int? seed = null)
         {
-            return RandomGenerator.GetRandUniform(lowerBound, upperBound, length);
+            return RandomGenerator.GetRandUniform(lowerBound, upperBound, length, seed);
         }
 
-        public List<double> GetRandNormal(double mean, double std, int length)
+        public List<double> GetRandNormal(double mean, double std, int length, int? seed)
         {
             List<double> allRandNumbers = new List<double>();
-            List<double> uniformNumbers = RandomGenerator.GetRandUniform(0, 1, length);
+            List<double> uniformNumbers = RandomGenerator.GetRandUniform(0, 1, length, seed);
 
             for(int i = 0; i < length; i++)
             {
@@ -59,9 +55,9 @@ namespace Stochastics
         }
 
 
-        public List<double> GetRandStandardNormal(int length)
+        public List<double> GetRandStandardNormal(int length, int? seed = null)
         {
-            return GetRandNormal(0, 1, length);
+            return GetRandNormal(0, 1, length, seed);
         }
 
         #endregion

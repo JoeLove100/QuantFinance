@@ -13,7 +13,7 @@ namespace Stochastics.Strategies
         public HedgedPortfolio(EquityOption option,
                                int numberOfContracts)
         {
-            _option = option;
+            Option = option;
             _numberOfContracts = numberOfContracts;
         }
 
@@ -21,8 +21,8 @@ namespace Stochastics.Strategies
 
         #region protected fields
 
-        public DateTime ExpiryDate => _option.ExpiryDate;
-        protected EquityOption _option;
+        public DateTime ExpiryDate => Option.ExpiryDate;
+        public readonly EquityOption Option;
         protected int _numberOfContracts;
 
         #endregion
@@ -37,7 +37,7 @@ namespace Stochastics.Strategies
         {
             var timePeriod = (double)currentDate.GetWorkingDaysTo(nextDate) / TimePeriods.BusinessDaysInYear;
 
-            var newOptionsValue = _option.GetCurrentPrice(nextDate, availableHistory) * _numberOfContracts;
+            var newOptionsValue = Option.GetCurrentPrice(nextDate, availableHistory) * _numberOfContracts;
             var newHedgeValue = hedgeValue * (availableHistory[nextDate].CurrentPrice / availableHistory[currentDate].CurrentPrice);
             newHedgeValue *= Math.Exp(availableHistory[currentDate].DivYield * timePeriod);  // incremental div yield
             var newBankAccountValue = bankAccountValue * Math.Exp(availableHistory[currentDate].InterestRate * timePeriod);

@@ -32,6 +32,7 @@ namespace ChartingApp
         #region properties
 
         public EquityOptionHedgingVM ViewModel;
+        protected int Seed = 1234;
 
         #endregion 
 
@@ -49,8 +50,14 @@ namespace ChartingApp
                 new HedgingStrategy(new StopLossPortfolio(option, 1), "Stop-loss hedging")
             };
 
-
-            ViewModel.PlotDailyPnL(new DateTime(2020, 1, 1), pricingData, strategies);
+            if (fixedData)
+            {
+                ViewModel.PlotDailyPnL(new DateTime(2020, 1, 1), pricingData, strategies, Seed);
+            }
+            else
+            {
+                ViewModel.PlotDailyPnL(new DateTime(2020, 1, 1), pricingData, strategies);
+            }
         }
 
         private void InitialiseControls()

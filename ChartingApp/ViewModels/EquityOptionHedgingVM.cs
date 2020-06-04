@@ -2,7 +2,7 @@
 using OxyPlot;
 using OxyPlot.Series;
 using OxyPlot.Annotations;
-using OptionPricing;
+using OxyPlot.Axes;
 using Utilities.MarketData;
 using System.ComponentModel;
 using System.Collections.Generic;
@@ -85,41 +85,54 @@ namespace ChartingApp.ViewModels
         public void ClearCharts()
         {
             PlotStockPrice.Series.Clear();
+            PlotStockPrice.Axes.Clear();
+
             PlotModelDaily.Series.Clear();
+            PlotModelDaily.Axes.Clear();
+
             PlotModelCumulative.Series.Clear();
+            PlotModelCumulative.Axes.Clear();
         }
 
         public void PlotDailyPnL(DateTime startDate,
                                  OptionPricingData basicPricingData,
-                                 List<HedgingStrategy> hedgingStrategies)
+                                 List<HedgingStrategy> hedgingStrategies,
+                                 int? seed = null)
         {
             ClearCharts();
 
             var gbmParameters = new GbmParameters(basicPricingData);
-            var pricingData = GenerateOptionPricingData(startDate, hedgingStrategies[0].ExpiryDate, gbmParameters, basicPricingData);
+            var pricingData = GenerateOptionPricingData(startDate, hedgingStrategies[0].ExpiryDate, gbmParameters, basicPricingData, seed);
+            var minPrice = double.PositiveInfinity;
+            var maxPrice = double.NegativeInfinity;
 
             var stockSeries = new LineSeries() { Title = @"Stock Price" };
             for(int i = 0;  i < pricingData.Count; i ++)
             {
-                stockSeries.Points.Add(new DataPoint(i, pricingData.Values[i].CurrentPrice));
+                var stockPrice = pricingData.Values[i].CurrentPrice;
+                stockSeries.Points.Add(new DataPoint(i, stockPrice));
+                minPrice = Math.Min(minPrice, stockPrice);
+                maxPrice = Math.Max(maxPrice, stockPrice);
             }
 
-            PlotStockPrice.Axes.Add(new OxyPlot.Axes.LinearAxis
+            PlotStockPrice.Axes.Add(new LinearAxis
             {
-                Position = OxyPlot.Axes.AxisPosition.Bottom,
-                Minimum = 0
+                Position = AxisPosition.Bottom,
+                Minimum = 0,
+                TextColor = OxyColors.Transparent
             });
 
             PlotStockPrice.Axes.Add(new OxyPlot.Axes.LinearAxis
             {
                 Position = OxyPlot.Axes.AxisPosition.Left,
-                Minimum = 55,
-                Maximum = 65
+                Minimum = (Math.Floor(minPrice / 5) - 1) * 5,
+                Maximum = (Math.Floor(maxPrice / 5) + 1) * 5
             });
 
             PlotStockPrice.Series.Add(stockSeries);
 
-            var strikeAnnotation = new LineAnnotation() { Y = 60, MinimumX=0, MaximumX=65, Color=OxyColors.Red ,
+            var strike = hedgingStrategies[0].Portfolio.Option.Strike;
+            var strikeAnnotation = new LineAnnotation() { Y = strike, MinimumX=0, MaximumX=stockSeries.Points.Count, Color=OxyColors.Red ,
             LineStyle=LineStyle.Solid, Type=LineAnnotationType.Horizontal};
             PlotStockPrice.Annotations.Add(strikeAnnotation);
 
@@ -155,6 +168,18 @@ namespace ChartingApp.ViewModels
 
                 PlotModelDaily.Series.Add(dailyPnlSeries);
                 PlotModelCumulative.Series.Add(cumulativeSeries);
+
+                PlotModelDaily.Axes.Add(new CategoryAxis()
+                {
+                    Position = AxisPosition.Bottom,
+                    IsAxisVisible = false
+                });
+
+                PlotModelCumulative.Axes.Add(new CategoryAxis()
+                {
+                    Position = AxisPosition.Bottom,
+                    IsAxisVisible = false
+                });
 
                 RefreshCharts();
             }
@@ -194,10 +219,11 @@ namespace ChartingApp.ViewModels
         private SortedList<DateTime, OptionPricingData> GenerateOptionPricingData(DateTime startDate,
                                                                                   DateTime expiryDate,
                                                                                   GbmParameters gbmParams,
-                                                                                  OptionPricingData basicPricingData)
+                                                                                  OptionPricingData basicPricingData,
+                                                                                  int? seed)
         {
             int days = startDate.GetWorkingDaysTo(expiryDate);
-            var stockPrices = StochasticEngine.GetGeometricBrownianSeries(gbmParams, 1.0 / TimePeriods.BusinessDaysInYear, days);
+            var stockPrices = StochasticEngine.GetGeometricBrownianSeries(gbmParams, 1.0 / TimePeriods.BusinessDaysInYear, days, seed);
             var pricingData = new SortedList<DateTime, OptionPricingData>();
             var date = startDate;
 

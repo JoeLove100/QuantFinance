@@ -25,9 +25,9 @@ namespace Stochastics
 
         #region abstract methods
 
-        public abstract List<double> GetGeometricBrownianSeries(GbmParameters parameters, double timestep, int length);
-        public abstract List<double> GetBrownianMotionSeries(GbmParameters parameters, double timestep, int length);
-        public abstract List<double> GetStandardBrownianMotionSeries(double timestep, int length);
+        public abstract List<double> GetGeometricBrownianSeries(GbmParameters parameters, double timestep, int length, int? seed = null);
+        public abstract List<double> GetBrownianMotionSeries(GbmParameters parameters, double timestep, int length, int? seed = null);
+        public abstract List<double> GetStandardBrownianMotionSeries(double timestep, int length, int? seed = null);
         public abstract double GetOptionValue(EquityOption option, DateTime currentDate, 
                                               GbmParameters gbmParams, double interestRate,
                                               int numberSims);

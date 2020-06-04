@@ -22,12 +22,12 @@ namespace Stochastics.Strategies
         public override (double, double, double) CurrentValue(DateTime currentDate, 
                                                               SortedList<DateTime, OptionPricingData> availableHistory)
         {
-            var optionValue = _option.GetCurrentPrice(currentDate, availableHistory) * _numberOfContracts;
+            var optionValue = Option.GetCurrentPrice(currentDate, availableHistory) * _numberOfContracts;
             double hedgeValue = 0;
-            if (_option.IsInTheMoney(currentDate, availableHistory))
+            if (Option.IsInTheMoney(currentDate, availableHistory))
             {
                 var sharePrice = availableHistory[currentDate].CurrentPrice;
-                hedgeValue = _option.IsCall ? -sharePrice : sharePrice;
+                hedgeValue = Option.IsCall ? -sharePrice : sharePrice;
                 hedgeValue *= _numberOfContracts;
             }
             var bankAccountValue = -(optionValue + optionValue);
