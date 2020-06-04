@@ -48,7 +48,9 @@
   <ItemGroup>
     <Compile Include="DigitalOption.cs" />
     <Compile Include="EquityOption.cs" />
+    <Compile Include="EquityOptionFactory.cs" />
     <Compile Include="EuropeanEquityOption.cs" />
+    <Compile Include="OptionType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

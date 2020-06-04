@@ -2,13 +2,11 @@
 using System.Collections.Generic;
 using OptionPricing;
 using Utilities.MarketData;
-using Utilities.ExtenstionMethods;
 
 namespace Stochastics.Strategies
 {
     public class DeltaHedgedPortfolio: HedgedPortfolio
     {
-
         #region constructor
 
         public DeltaHedgedPortfolio(EquityOption option,

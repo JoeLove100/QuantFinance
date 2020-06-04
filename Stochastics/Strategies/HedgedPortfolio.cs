@@ -21,6 +21,7 @@ namespace Stochastics.Strategies
 
         #region protected fields
 
+        public DateTime ExpiryDate => _option.ExpiryDate;
         protected EquityOption _option;
         protected int _numberOfContracts;
 

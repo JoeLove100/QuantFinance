@@ -1,21 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using ChartingApp.ViewModels;
 using OptionPricing;
 using Stochastics;
 using Stochastics.Strategies;
+using Utilities.MarketData;
 
 namespace ChartingApp
 {
@@ -28,10 +18,12 @@ namespace ChartingApp
 
         public MainWindow()
         {
-            SetViewModel();
-            DataContext = ViewModel;
-
             InitializeComponent();
+            InitialiseControls();
+            InitialiseViewModel();
+            AddEventHandlers();
+
+            SetViewModel();
 
         }
 
@@ -47,15 +39,48 @@ namespace ChartingApp
 
         private void SetViewModel()
         {
-            var expiryDate = new DateTime(2020, 3, 31);
-            EuropeanEquityOption option = new EuropeanEquityOption("Test underlying", expiryDate, 60, true, "Test curve");
-            BasicStochasticEngine stochasticEngine = new BasicStochasticEngine(new Sampler(1234));
-            HedgingStrategy hedgingStrategy = new HedgingStrategy(new StopLossPortfolio(option, 1));
-            ViewModel = new EquityOptionHedgingVM(option, stochasticEngine, hedgingStrategy);
 
-            ViewModel.PlotDailyPnL(new DateTime(2020, 1, 1), 55, 0.1, 0.04, 0.02);
+            EquityOption option = OptionDefinition.GetOption();
+            (OptionPricingData pricingData, bool fixedData) = MarketDataDefinition.GetMarketData();
+
+            var strategies = new List<HedgingStrategy>()
+            {
+                new HedgingStrategy(new DeltaHedgedPortfolio(option, 1), "Delta hedging"),
+                new HedgingStrategy(new StopLossPortfolio(option, 1), "Stop-loss hedging")
+            };
+
+
+            ViewModel.PlotDailyPnL(new DateTime(2020, 1, 1), pricingData, strategies);
         }
 
-        #endregion 
+        private void InitialiseControls()
+        {
+            OptionDefinition.SetOption(OptionType.EuropeanCall, 60, DateTime.Now);
+            MarketDataDefinition.SetMarketData(new OptionPricingData(60, 0.2, 0.04, 0.02), false);
+        }
+
+        private void InitialiseViewModel()
+        {
+            Sampler sampler = new Sampler();
+            BasicStochasticEngine stochasticEngine = new BasicStochasticEngine(sampler);
+            ViewModel = new EquityOptionHedgingVM(stochasticEngine);
+            DataContext = ViewModel;
+        }
+
+        #endregion
+
+        #region Event Handling
+
+        private void AddEventHandlers()
+        {
+            RecalcButton.Click += OnRefreshClicked;
+        }
+
+        private void OnRefreshClicked(object sender, RoutedEventArgs e)
+        {
+            SetViewModel();
+        }
+
+        #endregion
     }
 }

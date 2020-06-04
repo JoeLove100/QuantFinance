@@ -23,7 +23,7 @@ namespace Stochastics
             RandomGenerator = randomGenerator;
         }
 
-        public Sampler(int? seed)
+        public Sampler(int? seed = null)
         {
             RandomGenerator = new BasicRandomNumberGenerator(seed);
         }

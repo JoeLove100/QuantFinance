@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using OptionPricing;
 using Utilities.MarketData;
 
 namespace Stochastics.Strategies
@@ -9,15 +8,19 @@ namespace Stochastics.Strategies
     {
         #region constructor
 
-        public HedgingStrategy(HedgedPortfolio portfolio )
+        public HedgingStrategy(HedgedPortfolio portfolio, 
+                               string name)
         {
             Portfolio = portfolio;
+            Name = name;
         }
 
         #endregion
 
-        #region 
+        #region properties
 
+        public string Name;
+        public DateTime ExpiryDate => Portfolio.ExpiryDate;
         protected HedgedPortfolio Portfolio;
 
         #endregion

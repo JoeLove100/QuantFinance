@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Linq;
 using OxyPlot;
 using OxyPlot.Series;
+using OxyPlot.Annotations;
 using OptionPricing;
 using Utilities.MarketData;
 using System.ComponentModel;
@@ -18,13 +18,11 @@ namespace ChartingApp.ViewModels
 
         #region constructor
 
-        public EquityOptionHedgingVM(EquityOption option,
-                                     StochasticEngine stochasticEngine,
-                                     HedgingStrategy hedgingStrategy)
+        public EquityOptionHedgingVM(StochasticEngine stochasticEngine)
         {
-            Option = option;
             StochasticEngine = stochasticEngine;
-            HedgingStrategy = hedgingStrategy;
+
+            PlotStockPrice = new PlotModel();
             PlotModelDaily = new PlotModel();
             PlotModelCumulative = new PlotModel();
         }
@@ -51,9 +49,14 @@ namespace ChartingApp.ViewModels
         #region properties
 
         private readonly SortedList<DateTime, OptionPricingData> PricingData;
-        private EquityOption Option { get; }
         private StochasticEngine StochasticEngine { get; }
-        private HedgingStrategy HedgingStrategy { get; }
+
+        private PlotModel _plotStockPrice;
+        public PlotModel PlotStockPrice
+        {
+            get { return _plotStockPrice; }
+            set { _plotStockPrice = value; OnPropertyChanged("PlotStockPrice"); }
+        }
 
         private PlotModel _plotModelDaily;
         public PlotModel PlotModelDaily
@@ -72,52 +75,89 @@ namespace ChartingApp.ViewModels
 
         #region public methods
 
-        public void PlotDailyPnL(DateTime startDate,
-                                 double initialStockPrice,
-                                 double constantVol,
-                                 double constantInterest,
-                                 double constantDivYield)
+        public void RefreshCharts()
         {
-            var gbmParameters = new GbmParameters(constantInterest - constantDivYield, constantVol, initialStockPrice);
-            var pricingData = GenerateOptionPricingData(startDate, gbmParameters, constantVol, constantInterest, constantDivYield);
-            var pnl = HedgingStrategy.GetDailyPnl(pricingData);
+            PlotStockPrice.InvalidatePlot(true);
+            PlotModelDaily.InvalidatePlot(true);
+            PlotModelCumulative.InvalidatePlot(true);
+        }
 
-            var optionSeries = new ColumnSeries() { IsStacked=true};
-            var hedgeSeries = new ColumnSeries() { IsStacked = true };
-            var cashSeries = new ColumnSeries() { IsStacked = true };
-            var cumulativePnl = new List<double>();
-
-            foreach (KeyValuePair<DateTime, (double, double, double)> dailyPnl in pnl)
-            {
-                // TODO: plot different PnL elements seperately
-                (double optionPnl, double hedgePnl, double cashPnl) = dailyPnl.Value;
-                optionSeries.Items.Add(new ColumnItem(optionPnl));
-                hedgeSeries.Items.Add(new ColumnItem(hedgePnl));
-                cashSeries.Items.Add(new ColumnItem(cashPnl));
-                var totalPnL = optionPnl + hedgePnl + cashPnl;
-
-                if (cumulativePnl.Count == 0)
-                {
-                    cumulativePnl.Add(totalPnL);
-                }
-                else
-                {
-                    cumulativePnl.Add(cumulativePnl[cumulativePnl.Count - 1] + totalPnL); 
-                }
-            }
-
+        public void ClearCharts()
+        {
+            PlotStockPrice.Series.Clear();
             PlotModelDaily.Series.Clear();
-            PlotModelDaily.Series.Add(optionSeries);
-            PlotModelDaily.Series.Add(hedgeSeries);
-            PlotModelDaily.Series.Add(cashSeries);
-
             PlotModelCumulative.Series.Clear();
-            var cumulativeSeries = new ColumnSeries();
-            foreach(double dailyVal in cumulativePnl)
+        }
+
+        public void PlotDailyPnL(DateTime startDate,
+                                 OptionPricingData basicPricingData,
+                                 List<HedgingStrategy> hedgingStrategies)
+        {
+            ClearCharts();
+
+            var gbmParameters = new GbmParameters(basicPricingData);
+            var pricingData = GenerateOptionPricingData(startDate, hedgingStrategies[0].ExpiryDate, gbmParameters, basicPricingData);
+
+            var stockSeries = new LineSeries() { Title = @"Stock Price" };
+            for(int i = 0;  i < pricingData.Count; i ++)
             {
-                cumulativeSeries.Items.Add(new ColumnItem(dailyVal));
+                stockSeries.Points.Add(new DataPoint(i, pricingData.Values[i].CurrentPrice));
             }
-            PlotModelCumulative.Series.Add(cumulativeSeries);
+
+            PlotStockPrice.Axes.Add(new OxyPlot.Axes.LinearAxis
+            {
+                Position = OxyPlot.Axes.AxisPosition.Bottom,
+                Minimum = 0
+            });
+
+            PlotStockPrice.Axes.Add(new OxyPlot.Axes.LinearAxis
+            {
+                Position = OxyPlot.Axes.AxisPosition.Left,
+                Minimum = 55,
+                Maximum = 65
+            });
+
+            PlotStockPrice.Series.Add(stockSeries);
+
+            var strikeAnnotation = new LineAnnotation() { Y = 60, MinimumX=0, MaximumX=65, Color=OxyColors.Red ,
+            LineStyle=LineStyle.Solid, Type=LineAnnotationType.Horizontal};
+            PlotStockPrice.Annotations.Add(strikeAnnotation);
+
+            foreach (HedgingStrategy strategy in hedgingStrategies)
+            {
+
+                var pnl = strategy.GetDailyPnl(pricingData);
+
+                var dailyPnlSeries = new ColumnSeries() { Title = $"{strategy.Name} - Daily PnL" };
+                var cumulativeSeries = new ColumnSeries() { Title = $"{strategy.Name} - Cumulative PnL" };
+                var cumulativePnl = new List<double>();
+
+                foreach (KeyValuePair<DateTime, (double, double, double)> dailyPnl in pnl)
+                {
+                    // TODO: plot different PnL elements seperately
+                    (double optionPnl, double hedgePnl, double cashPnl) = dailyPnl.Value;
+                    var totalPnl = optionPnl + hedgePnl + cashPnl;
+                    dailyPnlSeries.Items.Add(new ColumnItem(totalPnl));
+                    if (cumulativePnl.Count == 0)
+                    {
+                        cumulativePnl.Add(totalPnl);
+                    }
+                    else
+                    {
+                        cumulativePnl.Add(cumulativePnl[cumulativePnl.Count - 1] + totalPnl);
+                    }
+                }
+
+                foreach (double dailyVal in cumulativePnl)
+                {
+                    cumulativeSeries.Items.Add(new ColumnItem(dailyVal));
+                }
+
+                PlotModelDaily.Series.Add(dailyPnlSeries);
+                PlotModelCumulative.Series.Add(cumulativeSeries);
+
+                RefreshCharts();
+            }
         }
 
         #endregion 
@@ -152,12 +192,11 @@ namespace ChartingApp.ViewModels
         }
 
         private SortedList<DateTime, OptionPricingData> GenerateOptionPricingData(DateTime startDate,
+                                                                                  DateTime expiryDate,
                                                                                   GbmParameters gbmParams,
-                                                                                  double vol,
-                                                                                  double interestRate,
-                                                                                  double divYield)
+                                                                                  OptionPricingData basicPricingData)
         {
-            int days = startDate.GetWorkingDaysTo(Option.ExpiryDate);
+            int days = startDate.GetWorkingDaysTo(expiryDate);
             var stockPrices = StochasticEngine.GetGeometricBrownianSeries(gbmParams, 1.0 / TimePeriods.BusinessDaysInYear, days);
             var pricingData = new SortedList<DateTime, OptionPricingData>();
             var date = startDate;
@@ -169,7 +208,7 @@ namespace ChartingApp.ViewModels
 
             foreach(double price in stockPrices)
             {
-                pricingData.Add(date, new OptionPricingData(price, vol, interestRate, divYield));
+                pricingData.Add(date, new OptionPricingData(price, basicPricingData.Vol, basicPricingData.InterestRate, basicPricingData.DivYield));
                 date = date.AddWorkingDay();
             }
 

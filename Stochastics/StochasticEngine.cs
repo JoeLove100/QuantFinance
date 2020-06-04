@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using OptionPricing;
+using Utilities.MarketData;
 
 namespace Stochastics
 {
@@ -45,6 +46,8 @@ namespace Stochastics
 
         #endregion
 
+        #region constructors
+
         public GbmParameters(double mean,
                              double vol,
                              double initialVal = 0)
@@ -53,5 +56,14 @@ namespace Stochastics
             Vol = vol;
             InitialVal = initialVal;
         }
+
+        public GbmParameters(OptionPricingData pricingData)
+        {
+            Mean = pricingData.InterestRate - pricingData.DivYield;
+            Vol = pricingData.Vol;
+            InitialVal = pricingData.CurrentPrice;
+        }
+
+        #endregion 
     }
 }
